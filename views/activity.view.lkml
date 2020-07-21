@@ -191,6 +191,11 @@ view: activity {
 #   }
 #
 
+# Doesn't work
+# dimension: test_granted {
+#   sql: ${auditlog.authorization_info}.granted ;;
+# }
+
 }
 
 
