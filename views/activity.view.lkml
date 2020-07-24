@@ -16,16 +16,6 @@ view: activity {
   }
 
 
-  dimension: span_id {
-    type: string
-    sql: ${TABLE}.spanId ;;
-  }
-
-  dimension: text_payload {
-    type: string
-    sql: ${TABLE}.textPayload ;;
-  }
-
   dimension_group: timestamp {
     type: time
     timeframes: [
@@ -40,15 +30,20 @@ view: activity {
     sql: ${TABLE}.timestamp ;;
   }
 
-  dimension: trace {
-    type: string
-    sql: ${TABLE}.trace ;;
+  dimension_group: receive {
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql: ${TABLE}.receiveTimestamp ;;
   }
 
-  dimension: trace_sampled {
-    type: yesno
-    sql: ${TABLE}.traceSampled ;;
-  }
 
   ###########
   ## MEASURES
@@ -69,77 +64,6 @@ view: activity {
     sql: ${TABLE}.httpRequest ;;
   }
 
-  dimension: cache_fill_bytes {
-    type: number
-    sql: ${TABLE}.httpRequest.cacheFillBytes ;;
-  }
-
-  dimension: cache_hit {
-    type: yesno
-    sql: ${TABLE}.httpRequest.cacheHit ;;
-  }
-
-  dimension: cache_lookup {
-    type: yesno
-    sql: ${TABLE}.httpRequest.cacheLookup ;;
-  }
-
-  dimension: cache_validated_with_origin_server {
-    type: yesno
-    sql: ${TABLE}.httpRequest.cacheValidatedWithOriginServer ;;
-  }
-
-  dimension: protocol {
-    type: string
-    sql: ${TABLE}.httpRequest.protocol ;;
-  }
-
-  dimension: referer {
-    type: string
-    sql: ${TABLE}.httpRequest.referer ;;
-  }
-
-  dimension: remote_ip {
-    type: string
-    sql: ${TABLE}.httpRequest.remoteIp ;;
-  }
-
-  dimension: request_method {
-    type: string
-    sql: ${TABLE}.httpRequest.requestMethod ;;
-  }
-
-  dimension: request_size {
-    type: number
-    sql: ${TABLE}.httpRequest.requestSize ;;
-  }
-
-  dimension: request_url {
-    type: string
-    sql: ${TABLE}.httpRequest.requestUrl ;;
-  }
-
-  dimension: response_size {
-    type: number
-    sql: ${TABLE}.httpRequest.responseSize ;;
-  }
-
-  dimension: server_ip {
-    type: string
-    sql: ${TABLE}.httpRequest.serverIp ;;
-  }
-
-  dimension: status {
-    type: number
-    sql: ${TABLE}.httpRequest.status ;;
-  }
-
-  dimension: user_agent {
-    type: string
-    sql: ${TABLE}.httpRequest.userAgent ;;
-  }
-
-########
   dimension: insert_id {
     type: string
     sql: ${TABLE}.insertId ;;
@@ -161,63 +85,402 @@ view: activity {
     sql: ${TABLE}.protopayload_auditlog ;;
   }
 
+
+  dimension: requesttest {
+    view_label: "Auditlog"
+    sql: ${TABLE}.protopayload_auditlog.request.name ;;
+  }
+
+  dimension: metadata_json {
+    view_label: "Auditlog"
+    type: string
+    sql: ${TABLE}.protopayload_auditlog.metadataJson ;;
+  }
+
+  dimension: method_name {
+    view_label: "Auditlog"
+    type: string
+    sql: ${TABLE}.protopayload_auditlog.methodName ;;
+  }
+
+  dimension: num_response_items {
+    view_label: "Auditlog"
+    type: number
+    sql: ${TABLE}.protopayload_auditlog.numResponseItems ;;
+  }
+
+  dimension: request_json {
+    view_label: "Auditlog"
+    type: string
+    sql: ${TABLE}.protopayload_auditlog.requestJson ;;
+  }
+
+  dimension: resource_name {
+    view_label: "Auditlog"
+    type: string
+    sql: ${TABLE}.protopayload_auditlog.resourceName ;;
+  }
+
+  dimension: service_name {
+    view_label: "Auditlog"
+    type: string
+    sql: ${TABLE}.protopayload_auditlog.serviceName ;;
+  }
+
+
   dimension: resource {
     hidden: yes
     sql: ${TABLE}.resource ;;
+  }
+
+  dimension: resource_type {
+    sql: ${TABLE}.resource.type ;;
+  }
+
+  dimension: status {
+    hidden: yes
+    sql: ${TABLE}.protopayload_auditlog.status ;;
+  }
+
+  dimension: code {
+    view_label: "Auditlog"
+    group_label: "Status"
+    type: number
+    sql: ${TABLE}.protopayload_auditlog.status.code ;;
+  }
+
+  dimension: message {
+    view_label: "Auditlog"
+    group_label: "Status"
+    type: string
+    sql: ${TABLE}.protopayload_auditlog.status.message ;;
+  }
+
+  dimension: caller_ip {
+    view_label: "Auditlog"
+    group_label: "Request Metadata"
+    type: string
+    sql: ${TABLE}.protopayload_auditlog.requestMetadata.callerIp ;;
+  }
+
+  dimension: caller_network {
+    view_label: "Auditlog"
+    group_label: "Request Metadata"
+    type: string
+    sql: ${TABLE}.protopayload_auditlog.requestMetadata.callerNetwork ;;
+  }
+
+  dimension: caller_supplied_user_agent {
+    view_label: "Auditlog"
+    group_label: "Request Metadata"
+    type: string
+    sql: ${TABLE}.protopayload_auditlog.requestMetadata.callerSuppliedUserAgent ;;
+  }
+
+  dimension: bucket_name {
+    group_label: "Resource Labels"
+    type: string
+    sql: ${TABLE}.resource.labels.bucket_name ;;
+  }
+
+  dimension: client_id {
+    group_label: "Resource Labels"
+    type: string
+    sql: ${TABLE}.resource.labels.client_id ;;
+  }
+
+  dimension: cluster_name {
+    group_label: "Resource Labels"
+    type: string
+    sql: ${TABLE}.resource.labels.cluster_name ;;
+  }
+
+  dimension: crypto_key_id {
+    group_label: "Resource Labels"
+    type: string
+    sql: ${TABLE}.resource.labels.crypto_key_id ;;
+  }
+
+  dimension: database_id {
+    group_label: "Resource Labels"
+    type: string
+    sql: ${TABLE}.resource.labels.database_id ;;
+  }
+
+  dimension: dataset_id {
+    group_label: "Resource Labels"
+    type: string
+    sql: ${TABLE}.resource.labels.dataset_id ;;
+  }
+
+  dimension: disk_id {
+    group_label: "Resource Labels"
+    type: string
+    sql: ${TABLE}.resource.labels.disk_id ;;
+  }
+
+  dimension: email_id {
+    group_label: "Resource Labels"
+    type: string
+    sql: ${TABLE}.resource.labels.email_id ;;
+  }
+
+  dimension: firewall_rule_id {
+    group_label: "Resource Labels"
+    type: string
+    sql: ${TABLE}.resource.labels.firewall_rule_id ;;
+  }
+
+  dimension: instance_group_id {
+    group_label: "Resource Labels"
+    type: string
+    sql: ${TABLE}.resource.labels.instance_group_id ;;
+  }
+
+  dimension: instance_group_manager_id {
+    group_label: "Resource Labels"
+    type: string
+    sql: ${TABLE}.resource.labels.instance_group_manager_id ;;
+  }
+
+  dimension: instance_group_manager_name {
+    group_label: "Resource Labels"
+    type: string
+    sql: ${TABLE}.resource.labels.instance_group_manager_name ;;
+  }
+
+  dimension: instance_group_name {
+    group_label: "Resource Labels"
+    type: string
+    sql: ${TABLE}.resource.labels.instance_group_name ;;
+  }
+
+  dimension: instance_id {
+    group_label: "Resource Labels"
+    type: string
+    sql: ${TABLE}.resource.labels.instance_id ;;
+  }
+
+  dimension: instance_template_id {
+    group_label: "Resource Labels"
+    type: string
+    sql: ${TABLE}.resource.labels.instance_template_id ;;
+  }
+
+  dimension: instance_template_name {
+    group_label: "Resource Labels"
+    type: string
+    sql: ${TABLE}.resource.labels.instance_template_name ;;
+  }
+
+  dimension: key_ring_id {
+    group_label: "Resource Labels"
+    type: string
+    sql: ${TABLE}.resource.labels.key_ring_id ;;
+  }
+
+  dimension: location {
+    group_label: "Resource Labels"
+    type: string
+    sql: ${TABLE}.resource.labels.location ;;
+  }
+
+  dimension: method {
+    group_label: "Resource Labels"
+    type: string
+    sql: ${TABLE}.resource.labels.method ;;
+  }
+
+  dimension: resource_labels_name {
+    group_label: "Resource Labels"
+    type: string
+    sql: ${TABLE}.resource.labels.name ;;
+  }
+
+  dimension: network_id {
+    group_label: "Resource Labels"
+    type: string
+    sql: ${TABLE}.resource.labels.network_id ;;
+  }
+
+  dimension: nodepool_name {
+    group_label: "Resource Labels"
+    type: string
+    sql: ${TABLE}.resource.labels.nodepool_name ;;
+  }
+
+  dimension: organization_id {
+    group_label: "Resource Labels"
+    type: string
+    sql: ${TABLE}.resource.labels.organization_id ;;
+  }
+
+  dimension: policy_name {
+    group_label: "Resource Labels"
+    type: string
+    sql: ${TABLE}.resource.labels.policy_name ;;
+  }
+
+  dimension: project_id {
+    group_label: "Resource Labels"
+    type: string
+    sql: ${TABLE}.resource.labels.project_id ;;
+  }
+
+  dimension: region {
+    group_label: "Resource Labels"
+    type: string
+    sql: ${TABLE}.resource.labels.region ;;
+  }
+
+  dimension: reserved_address_id {
+    group_label: "Resource Labels"
+    type: string
+    sql: ${TABLE}.resource.labels.reserved_address_id ;;
+  }
+
+  dimension: role_name {
+    group_label: "Resource Labels"
+    type: string
+    sql: ${TABLE}.resource.labels.role_name ;;
+  }
+
+  dimension: router_id {
+    group_label: "Resource Labels"
+    type: string
+    sql: ${TABLE}.resource.labels.router_id ;;
+  }
+
+  dimension: resource_service {
+    group_label: "Resource Labels"
+    hidden: yes
+    type: string
+    sql: ${TABLE}.resource.labels.service ;;
+  }
+
+  dimension: subnetwork_id {
+    group_label: "Resource Labels"
+    type: string
+    sql: ${TABLE}.resource.labels.subnetwork_id ;;
+  }
+
+  dimension: subnetwork_name {
+    group_label: "Resource Labels"
+    type: string
+    sql: ${TABLE}.resource.labels.subnetwork_name ;;
+  }
+
+  dimension: target_pool_id {
+    group_label: "Resource Labels"
+    type: string
+    sql: ${TABLE}.resource.labels.target_pool_id ;;
+  }
+
+  dimension: unique_id {
+    group_label: "Resource Labels"
+    type: string
+    sql: ${TABLE}.resource.labels.unique_id ;;
+  }
+
+  dimension: version {
+    group_label: "Resource Labels"
+    type: string
+    sql: ${TABLE}.resource.labels.version ;;
+  }
+
+  dimension: zone {
+    group_label: "Resource Labels"
+    type: string
+    sql: ${TABLE}.resource.labels.zone ;;
   }
 
   dimension: source_location {
     hidden: yes
     sql: ${TABLE}.sourceLocation ;;
   }
-
-#   dimension: granted {
-#     type: yesno
-#     sql: ${authorization_info.granted} ;;
-#   }
-
-#   dimension_group: receive_timestamp {
-#     type: time
-#     timeframes: [
-#       raw,
-#       time,
-#       date,
-#       week,
-#       month,
-#       quarter,
-#       year
-#     ]
-#     sql: ${TABLE}.receiveTimestamp ;;
-#   }
-#
-
-# Doesn't work
-# dimension: test_granted {
-#   sql: ${auditlog.authorization_info}.granted ;;
-# }
-
 }
 
 
   ##########
   ## ARRAYS and NESTING
   view: auditlog {
+    view_label: "Auditlog"
     sql_table_name: `cloudaudit_googleapis_com_activity.protopayload_auditlog` ;;
 
     dimension: authorization_info {
       hidden: yes
       sql: ${TABLE}.authorizationInfo ;;
     }
+    dimension: authentication_info {
+      hidden: yes
+      sql: ${TABLE}.authenticationInfo ;;
+    }
+
+    ### IDK How to deal with the @ in the key name
+    dimension: type {
+      sql: ${TABLE}.\@type ;;
+    }
   }
 
 
   view: authorization_info {
-    sql_table_name: `cloudaudit_googleapis_com_activity.protopayload_auditlog.authorization_info` ;;
+    view_label: "Auditlog"
 
-  dimension: granted {
-    type: yesno
-    sql: ${TABLE}.granted ;;
+    dimension: permission {
+      group_label: "Authorization Info"
+      type: string
+      sql: ${TABLE}.permission ;;
+    }
+
+    dimension: resource {
+      group_label: "Authorization Info"
+      type: string
+      sql: ${TABLE}.resource ;;
+    }
+
+    dimension: granted {
+      group_label: "Authorization Info"
+      type: yesno
+      sql: ${TABLE}.granted ;;
+    }
+
+#     dimension: name {
+#       group_label: "Protopayload Auditlog Auth Info Resource"
+#       type: string
+#       sql: ${TABLE}.protopayload_auditlog.authorization_info.resource_attributes.name ;;
+#     }
+#
+#     dimension: service {
+#       group_label: "Protopayload Auditlog Auth Info Resource"
+#       type: string
+#       sql: ${TABLE}.protopayload_auditlog.authorization_info.resource_attributes.service ;;
+#     }
+#
+#     dimension: type {
+#       group_label: "Protopayload Auditlog Auth Info Resource"
+#       type: string
+#       sql: ${TABLE}.protopayload_auditlog.authorization_info.resource_attributes.type ;;
+#     }
+    }
+
+view: authentication_info {
+  view_label: "Auditlog"
+  dimension: authority_selector {
+    group_label: "Authentication Info"
+    type: string
+    sql: ${TABLE}.authoritySelector ;;
   }
 
-
+  dimension: principal_email {
+    group_label: "Authentication Info"
+    type: string
+    sql: ${TABLE}.principalEmail ;;
   }
+
+  dimension: principal_subject {
+    group_label: "Authentication Info"
+    type: string
+    sql: ${TABLE}.principalSubject ;;
+  }
+
+}

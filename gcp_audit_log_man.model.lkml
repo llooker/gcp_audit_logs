@@ -18,5 +18,9 @@ explore: activity {
     sql: LEFT JOIN UNNEST(${auditlog.authorization_info}) as authorization_info ;;
   }
 
+  join: authentication_info {
+    sql: LEFT JOIN UNNEST([${auditlog.authentication_info}]) as authentication_info ;;
+    relationship: one_to_one
+  }
 
 }
