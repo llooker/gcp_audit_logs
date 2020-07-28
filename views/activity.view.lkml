@@ -15,12 +15,24 @@ view: activity {
     sql: ${TABLE}.severity ;;
   }
 
+  measure: count_services {
+    type: count_distinct
+    sql: ${service_name} ;;
+  }
+
+  measure: count_emails {
+    type: count_distinct
+    sql:  ${authentication_info.principal_email} ;;
+  }
+
 
   dimension_group: timestamp {
     type: time
     timeframes: [
       raw,
       time,
+      minute30,
+      hour,
       date,
       week,
       month,
