@@ -33,6 +33,9 @@ view: activity {
     timeframes: [
       raw,
       time,
+      microsecond,
+      millisecond,
+
       minute30,
       hour,
       date,

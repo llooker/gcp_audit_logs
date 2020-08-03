@@ -26,3 +26,5 @@ explore: activity {
 
 
 }
+
+explore: security_issues {}
