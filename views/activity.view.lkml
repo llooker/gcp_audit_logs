@@ -74,7 +74,7 @@ view: activity {
   measure: access_denials {
     description: "Count of Access Grants being Denied by a Service"
     type: count
-    filters: [authorization_info.granted : "Yes"]
+    filters: [activity_authorization_info.granted : "Yes"]
     drill_fields: [authentication_info.principal_email, timestamp_time, service_name, access_denials]
   }
 
