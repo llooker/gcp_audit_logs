@@ -27,4 +27,8 @@ explore: activity {
 
 }
 
-explore: security_issues {}
+explore: security_issues {
+  hidden: yes
+}
+
+explore: failed_logins {}
