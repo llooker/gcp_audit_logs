@@ -39,3 +39,9 @@ explore: access {
     relationship: one_to_one
   }
 }
+
+explore: security_issues {
+  hidden: yes
+}
+
+explore: failed_logins {}

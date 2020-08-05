@@ -16,11 +16,13 @@ view: activity {
   }
 
   measure: count_services {
+    label: "Services Count"
     type: count_distinct
     sql: ${service_name} ;;
   }
 
   measure: count_emails {
+    label: "User Count"
     type: count_distinct
     sql:  ${activity_authentication_info.principal_email} ;;
   }
@@ -31,6 +33,9 @@ view: activity {
     timeframes: [
       raw,
       time,
+      microsecond,
+      millisecond,
+
       minute30,
       hour,
       date,
@@ -61,9 +66,24 @@ view: activity {
   ## MEASURES
 
   measure: count {
+    label: "Activity Count"
     type: count
     drill_fields: [log_name]
   }
+
+  measure: access_denials {
+    description: "Count of Access Grants being Denied by a Service"
+    type: count
+    filters: [authorization_info.granted : "Yes"]
+    drill_fields: [authentication_info.principal_email, timestamp_time, service_name, access_denials]
+  }
+
+measure: avg_denials_per_user {
+  type: number
+  value_format_name: decimal_1
+  sql: ${access_denials} / ${activity.count_emails}  ;;
+  drill_fields: [authentication_info.principal_email, timestamp_time, service_name, avg_denials_per_user]
+}
 
 
 
