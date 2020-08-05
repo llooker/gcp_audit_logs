@@ -496,7 +496,7 @@ view: activity {
     }
 
 view: activity_authentication_info {
-  sql_table_name: `cloudaudit_googleapis_com_access.protopayload_auditlog.authentication_info` ;;
+  sql_table_name: `cloudaudit_googleapis_com_activity.protopayload_auditlog.authentication_info` ;;
   view_label: "Activity AuditLog"
   dimension: authority_selector {
     group_label: "Authentication Info"

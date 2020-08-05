@@ -35,7 +35,7 @@ explore: access {
   }
 
   join: access_authentication_info {
-    sql: LEFT JOIN UNNEST([${access_auditlog.authentication_info}]) as accesss_authentication_info ;;
+    sql: LEFT JOIN UNNEST([${access_auditlog.authentication_info}]) as access_authentication_info ;;
     relationship: one_to_one
   }
 }

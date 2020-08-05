@@ -1,5 +1,5 @@
 view: access {
-  sql_table_name: `allofthelogs.cloudaudit_googleapis_com_access`
+  sql_table_name: `allofthelogs.cloudaudit_googleapis_com_data_access`
     ;;
 
   #############
@@ -131,12 +131,6 @@ view: access {
     view_label: "Auditlog"
     type: string
     sql: ${TABLE}.protopayload_auditlog.resourceName ;;
-  }
-
-  dimension: table_name {
-    view_label: "Auditlog"
-    type: string
-    sql: REGEXP_EXTRACT(${TABLE}.protopayload_auditlog.resourceName, '^projects/[^/]+/datasets/[^/]+/tables/(.*)$')  ;;
   }
 
   dimension: resource {
@@ -399,6 +393,12 @@ view: access {
     sql: ${TABLE}.resource.labels.version ;;
   }
 
+  dimension: service_name {
+    view_label: "Auditlog"
+    type: string
+    sql: ${TABLE}.protopayload_auditlog.serviceName ;;
+  }
+
   dimension: zone {
     group_label: "Resource Labels"
     type: string
@@ -418,16 +418,46 @@ view: access {
     sql: REGEXP_EXTRACT(${TABLE}.protopayload_auditlog.resourceName, '^projects/[^/]+/datasets/([^/]+)/tables')  ;;
   }
 
-  dimension: service_name {
+  dimension: table_name {
     view_label: "BigQuery"
     type: string
-    sql: ${TABLE}.protopayload_auditlog.serviceName ;;
+    sql: REGEXP_EXTRACT(${TABLE}.protopayload_auditlog.resourceName, '^projects/[^/]+/datasets/[^/]+/tables/(.*)$')  ;;
   }
 
-  dimension: bytes_billed {
+
+  dimension: slots_ms {
     view_label: "BigQuery"
     type: number
-    sql:  ${TABLE}.protopayload_auditlog.servicedata_v1_bigquery.jobCompletedEvent.job.jobStatistics.totalBilledBytes ;;
+    value_format_name: decimal_0
+    sql: ${TABLE}.protopayload_auditlog.servicedata_v1_bigquery.jobCompletedEvent.job.jobStatistics.totalSlotMs ;;
+  }
+
+  measure: total_slots_ms {
+    view_label: "BigQuery"
+    type: sum
+    value_format_name: decimal_0
+    sql: ${slots_ms} ;;
+  }
+
+  measure: est_slot_cost_usd {
+    view_label: "BigQuery"
+    type: number
+    value_format_name: usd_0
+    sql: 17 * ${total_slots_ms} ;;
+  }
+
+  dimension: data_processed_TB {
+    view_label: "BigQuery"
+    type: number
+    value_format_name: decimal_2
+    sql:  ${TABLE}.protopayload_auditlog.servicedata_v1_bigquery.jobCompletedEvent.job.jobStatistics.totalBilledBytes/POWER(2,40) ;;
+  }
+
+  measure: total_data_processed_TB {
+    view_label: "BigQuery"
+    type: sum
+    value_format_name: decimal_2
+    sql: ${data_processed_TB} ;;
   }
 }
 
@@ -436,7 +466,7 @@ view: access {
 ## ARRAYS and NESTING
 view: access_auditlog {
   view_label: "Auditlog"
-  sql_table_name: `cloudaudit_googleapis_com_access.protopayload_auditlog` ;;
+  sql_table_name: `cloudaudit_googleapis_com_data_access.protopayload_auditlog` ;;
 
   dimension: authorization_info {
     hidden: yes
@@ -455,6 +485,7 @@ view: access_auditlog {
 
 
 view: access_authorization_info {
+  sql_table_name: `cloudaudit_googleapis_com_data_access.protopayload_auditlog.authorization_info` ;;
   view_label: "Auditlog"
 
   dimension: permission {
@@ -495,6 +526,8 @@ view: access_authorization_info {
 }
 
 view: access_authentication_info {
+  sql_table_name: `cloudaudit_googleapis_com_data_access.protopayload_auditlog.authentication_info` ;;
+
   view_label: "Auditlog"
   dimension: authority_selector {
     group_label: "Authentication Info"
