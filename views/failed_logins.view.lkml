@@ -146,6 +146,7 @@ view: failed_logins {
   }
 
   dimension: max_not_granted_rank {
+    label: "Max # of Consecutive Denies"
     type: number
     sql: ${TABLE}.max_not_granted_rank ;;
   }
