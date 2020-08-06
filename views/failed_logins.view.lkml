@@ -11,7 +11,7 @@ view: failed_logins {
         -- number each login attempt by date and user, if same date and same user, sort by service
         ROW_NUMBER() OVER(PARTITION BY authentication_info.principalEmail ORDER BY authentication_info.principalEmail,activity.timestamp,activity.protopayload_auditlog.serviceName) RN1,
         -- number each login attempt by date, user, and whether it was successful. If same date and same user, sort by service
-        ROW_NUMBER() OVER(PARTITION BY authentication_info.principalEmail, granted ORDER BY authentication_info.principalEmail,activity.timestamp,activity.protopayload_auditlog.serviceName) RN2
+        ROW_NUMBER() OVER(PARTITION BY authentication_info.principalEmail, activity.protopayload_auditlog.serviceName, granted ORDER BY authentication_info.principalEmail,activity.timestamp,activity.protopayload_auditlog.serviceName) RN2
       FROM `allofthelogs.cloudaudit_googleapis_com_activity`
            AS activity
       LEFT JOIN UNNEST([activity.protopayload_auditlog]) as auditlog
@@ -30,7 +30,7 @@ view: failed_logins {
       -- Working off above temp table, rank/number subsequent logins split by successful and unsuccessful logins.
       CTE2 AS
       (
-          SELECT *, RN1 - RN2 as row_diff, ROW_NUMBER() OVER(PARTITION BY principal_email, granted, RN1 - RN2 ORDER BY principal_email,RN1) AS max_conseq_login_attempts
+          SELECT *, RN1 - RN2 as row_diff, ROW_NUMBER() OVER(PARTITION BY principal_email, service_name, granted, RN1 - RN2 ORDER BY principal_email,RN1) AS max_conseq_login_attempts
           FROM rank_login_sq
           ORDER BY principal_email, RN1
       ),
@@ -38,19 +38,21 @@ view: failed_logins {
       -- get last successful login
       max_granted_time AS (SELECT
                 principal_email,
+                service_name,
                 MAX(activity_timestamp_date) AS max_activity_timestamp_date
             FROM CTE2
             WHERE granted
-            GROUP BY 1
+            GROUP BY 1,2
             ),
       -- get last unsuccessful login and number of unsuccessful login attemps in a row
       max_not_granted_time AS (SELECT
                 principal_email,
+                service_name,
                 MAX(activity_timestamp_date) AS max_activity_timestamp_date,
                 MAX(max_conseq_login_attempts) as max_not_granted_rank
             FROM CTE2
             WHERE granted IS NULL
-            GROUP BY 1
+            GROUP BY 1,2
             )
       -- select all relevant data from above temp tables
       SELECT
@@ -61,21 +63,22 @@ view: failed_logins {
         CTE2.RN1  AS RN1,
         CTE2.RN2  AS RN2,
         CTE2.row_diff,
+        CTE2.max_conseq_login_attempts,
         max_granted_time.max_activity_timestamp_date AS max_granted_time,
         max_not_granted_time.max_activity_timestamp_date AS max_not_granted_time,
         max_not_granted_time.max_not_granted_rank as max_not_granted_rank
 
       FROM CTE2
-      LEFT JOIN max_not_granted_time ON max_not_granted_time.principal_email = CTE2.principal_email
-      LEFT JOIN max_granted_time ON max_granted_time.principal_email = CTE2.principal_email
+      LEFT JOIN max_not_granted_time ON max_not_granted_time.principal_email = CTE2.principal_email AND max_not_granted_time.service_name = CTE2.service_name
+      LEFT JOIN max_granted_time ON max_granted_time.principal_email = CTE2.principal_email AND max_granted_time.service_name = CTE2.service_name
 
       -- Only keep users/attemps where we had a successful login last (didn't end on a string of unsuccessful logins)
-      WHERE max_granted_time.max_activity_timestamp_date > max_not_granted_time.max_activity_timestamp_date
+      WHERE max_granted_time.max_activity_timestamp_date >= max_not_granted_time.max_activity_timestamp_date
       -- Make sure that successful login was within our timeframe that we want
       AND (max_granted_time.max_activity_timestamp_date ) >= {% date_start date_filter %} AND (max_granted_time.max_activity_timestamp_date ) < {% date_end date_filter %}
       -- add in a threshold for number of consecutive failed login attemps
       AND max_not_granted_time.max_not_granted_rank >= {% parameter failed_login_threshold %}
-      GROUP BY 1,2,3,4,5,6,7,8,9,10
+      GROUP BY 1,2,3,4,5,6,7,8,9,10,11
       ORDER BY 3,5;;
   }
 
