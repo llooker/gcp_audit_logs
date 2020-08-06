@@ -6,25 +6,38 @@ include: "/views/**/*.view"
 
 explore: activity {
 
-
-  join: auditlog {
-    sql: LEFT JOIN UNNEST([${activity.protopayload_auditlog}]) as auditlog ;;
+  join: activity_auditlog {
+    sql: LEFT JOIN UNNEST([${activity.protopayload_auditlog}]) as activity_auditlog ;;
     relationship: one_to_one
   }
 
-
-  join: authorization_info {
+  join: activity_authorization_info {
     relationship: one_to_many
-    sql: LEFT JOIN UNNEST(${auditlog.authorization_info}) as authorization_info ;;
+    sql: LEFT JOIN UNNEST(${activity_auditlog.authorization_info}) as activity_authorization_info ;;
   }
 
-  join: authentication_info {
-    sql: LEFT JOIN UNNEST([${auditlog.authentication_info}]) as authentication_info ;;
+  join: activity_authentication_info {
+    sql: LEFT JOIN UNNEST([${activity_auditlog.authentication_info}]) as activity_authentication_info ;;
     relationship: one_to_one
   }
 
+}
 
+explore: access {
+  join: access_auditlog {
+    sql: LEFT JOIN UNNEST([${access.protopayload_auditlog}]) as access_auditlog ;;
+    relationship: one_to_one
+  }
 
+  join: access_authorization_info {
+    relationship: one_to_many
+    sql: LEFT JOIN UNNEST(${access_auditlog.authorization_info}) as access_authorization_info ;;
+  }
+
+  join: access_authentication_info {
+    sql: LEFT JOIN UNNEST([${access_auditlog.authentication_info}]) as access_authentication_info ;;
+    relationship: one_to_one
+  }
 }
 
 explore: security_issues {

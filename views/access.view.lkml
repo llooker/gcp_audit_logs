@@ -1,9 +1,9 @@
-view: activity {
-  sql_table_name: `allofthelogs.cloudaudit_googleapis_com_activity`
+view: access {
+  sql_table_name: `allofthelogs.cloudaudit_googleapis_com_data_access`
     ;;
 
- #############
- ## DIMENSIONS
+  #############
+  ## DIMENSIONS
 
   dimension: log_name {
     type: string
@@ -16,15 +16,13 @@ view: activity {
   }
 
   measure: count_services {
-    label: "Services Count"
     type: count_distinct
     sql: ${service_name} ;;
   }
 
   measure: count_emails {
-    label: "User Count"
     type: count_distinct
-    sql:  ${activity_authentication_info.principal_email} ;;
+    sql:  ${access_authentication_info.principal_email} ;;
   }
 
 
@@ -33,9 +31,6 @@ view: activity {
     timeframes: [
       raw,
       time,
-      microsecond,
-      millisecond,
-
       minute30,
       hour,
       date,
@@ -66,24 +61,9 @@ view: activity {
   ## MEASURES
 
   measure: count {
-    label: "Activity Count"
     type: count
     drill_fields: [log_name]
   }
-
-  measure: access_denials {
-    description: "Count of Access Grants being Denied by a Service"
-    type: count
-    filters: [activity_authorization_info.granted : "Yes"]
-    drill_fields: [authentication_info.principal_email, timestamp_time, service_name, access_denials]
-  }
-
-measure: avg_denials_per_user {
-  type: number
-  value_format_name: decimal_1
-  sql: ${access_denials} / ${activity.count_emails}  ;;
-  drill_fields: [authentication_info.principal_email, timestamp_time, service_name, avg_denials_per_user]
-}
 
 
 
@@ -119,44 +99,38 @@ measure: avg_denials_per_user {
 
 
   dimension: requesttest {
-    view_label: "Activity AuditLog"
+    view_label: "Auditlog"
     sql: ${TABLE}.protopayload_auditlog.request.name ;;
   }
 
   dimension: metadata_json {
-    view_label: "Activity AuditLog"
+    view_label: "Auditlog"
     type: string
     sql: ${TABLE}.protopayload_auditlog.metadataJson ;;
   }
 
   dimension: method_name {
-    view_label: "Activity AuditLog"
+    view_label: "Auditlog"
     type: string
     sql: ${TABLE}.protopayload_auditlog.methodName ;;
   }
 
   dimension: num_response_items {
-    view_label: "Activity AuditLog"
+    view_label: "Auditlog"
     type: number
     sql: ${TABLE}.protopayload_auditlog.numResponseItems ;;
   }
 
   dimension: request_json {
-    view_label: "Activity AuditLog"
+    view_label: "Auditlog"
     type: string
     sql: ${TABLE}.protopayload_auditlog.requestJson ;;
   }
 
   dimension: resource_name {
-    view_label: "Activity AuditLog"
+    view_label: "Auditlog"
     type: string
     sql: ${TABLE}.protopayload_auditlog.resourceName ;;
-  }
-
-  dimension: table_name {
-    view_label: "Activity AuditLog"
-    type: string
-    sql: REGEXP_EXTRACT(${TABLE}.protopayload_auditlog.resourceName, '^projects/[^/]+/datasets/[^/]+/tables/(.*)$')  ;;
   }
 
   dimension: resource {
@@ -174,35 +148,35 @@ measure: avg_denials_per_user {
   }
 
   dimension: code {
-    view_label: "Activity AuditLog"
+    view_label: "Auditlog"
     group_label: "Status"
     type: number
     sql: ${TABLE}.protopayload_auditlog.status.code ;;
   }
 
   dimension: message {
-    view_label: "Activity AuditLog"
+    view_label: "Auditlog"
     group_label: "Status"
     type: string
     sql: ${TABLE}.protopayload_auditlog.status.message ;;
   }
 
   dimension: caller_ip {
-    view_label: "Activity AuditLog"
+    view_label: "Auditlog"
     group_label: "Request Metadata"
     type: string
     sql: ${TABLE}.protopayload_auditlog.requestMetadata.callerIp ;;
   }
 
   dimension: caller_network {
-    view_label: "Activity AuditLog"
+    view_label: "Auditlog"
     group_label: "Request Metadata"
     type: string
     sql: ${TABLE}.protopayload_auditlog.requestMetadata.callerNetwork ;;
   }
 
   dimension: caller_supplied_user_agent {
-    view_label: "Activity AuditLog"
+    view_label: "Auditlog"
     group_label: "Request Metadata"
     type: string
     sql: ${TABLE}.protopayload_auditlog.requestMetadata.callerSuppliedUserAgent ;;
@@ -419,6 +393,12 @@ measure: avg_denials_per_user {
     sql: ${TABLE}.resource.labels.version ;;
   }
 
+  dimension: service_name {
+    view_label: "Auditlog"
+    type: string
+    sql: ${TABLE}.protopayload_auditlog.serviceName ;;
+  }
+
   dimension: zone {
     group_label: "Resource Labels"
     type: string
@@ -438,63 +418,93 @@ measure: avg_denials_per_user {
     sql: REGEXP_EXTRACT(${TABLE}.protopayload_auditlog.resourceName, '^projects/[^/]+/datasets/([^/]+)/tables')  ;;
   }
 
-  dimension: service_name {
+  dimension: table_name {
     view_label: "BigQuery"
     type: string
-    sql: ${TABLE}.protopayload_auditlog.serviceName ;;
+    sql: REGEXP_EXTRACT(${TABLE}.protopayload_auditlog.resourceName, '^projects/[^/]+/datasets/[^/]+/tables/(.*)$')  ;;
   }
 
-  dimension: bytes_billed {
+
+  dimension: slots_ms {
     view_label: "BigQuery"
     type: number
-    sql:  ${TABLE}.protopayload_auditlog.servicedata_v1_bigquery.jobCompletedEvent.job.jobStatistics.totalBilledBytes ;;
+    value_format_name: decimal_0
+    sql: ${TABLE}.protopayload_auditlog.servicedata_v1_bigquery.jobCompletedEvent.job.jobStatistics.totalSlotMs ;;
+  }
+
+  measure: total_slots_ms {
+    view_label: "BigQuery"
+    type: sum
+    value_format_name: decimal_0
+    sql: ${slots_ms} ;;
+  }
+
+  measure: est_slot_cost_usd {
+    view_label: "BigQuery"
+    type: number
+    value_format_name: usd_0
+    sql: 17 * ${total_slots_ms} ;;
+  }
+
+  dimension: data_processed_TB {
+    view_label: "BigQuery"
+    type: number
+    value_format_name: decimal_2
+    sql:  ${TABLE}.protopayload_auditlog.servicedata_v1_bigquery.jobCompletedEvent.job.jobStatistics.totalBilledBytes/POWER(2,40) ;;
+  }
+
+  measure: total_data_processed_TB {
+    view_label: "BigQuery"
+    type: sum
+    value_format_name: decimal_2
+    sql: ${data_processed_TB} ;;
   }
 }
 
 
-  ##########
-  ## ARRAYS and NESTING
-  view: activity_auditlog {
-    view_label: "Activity AuditLog"
-    sql_table_name: `cloudaudit_googleapis_com_activity.protopayload_auditlog` ;;
+##########
+## ARRAYS and NESTING
+view: access_auditlog {
+  view_label: "Auditlog"
+  sql_table_name: `cloudaudit_googleapis_com_data_access.protopayload_auditlog` ;;
 
-    dimension: authorization_info {
-      hidden: yes
-      sql: ${TABLE}.authorizationInfo ;;
-    }
-    dimension: authentication_info {
-      hidden: yes
-      sql: ${TABLE}.authenticationInfo ;;
-    }
-
-    ### IDK How to deal with the @ in the key name
-    dimension: type {
-      sql: ${TABLE}.\@type ;;
-    }
+  dimension: authorization_info {
+    hidden: yes
+    sql: ${TABLE}.authorizationInfo ;;
+  }
+  dimension: authentication_info {
+    hidden: yes
+    sql: ${TABLE}.authenticationInfo ;;
   }
 
+  ### IDK How to deal with the @ in the key name
+  dimension: type {
+    sql: ${TABLE}.\@type ;;
+  }
+}
 
-  view: activity_authorization_info {
-    sql_table_name: `cloudaudit_googleapis_com_activity.protopayload_auditlog.authorization_info` ;;
-    view_label: "Activity AuditLog"
 
-    dimension: permission {
-      group_label: "Authorization Info"
-      type: string
-      sql: ${TABLE}.permission ;;
-    }
+view: access_authorization_info {
+  sql_table_name: `cloudaudit_googleapis_com_data_access.protopayload_auditlog.authorization_info` ;;
+  view_label: "Auditlog"
 
-    dimension: resource {
-      group_label: "Authorization Info"
-      type: string
-      sql: ${TABLE}.resource ;;
-    }
+  dimension: permission {
+    group_label: "Authorization Info"
+    type: string
+    sql: ${TABLE}.permission ;;
+  }
 
-    dimension: granted {
-      group_label: "Authorization Info"
-      type: yesno
-      sql: ${TABLE}.granted ;;
-    }
+  dimension: resource {
+    group_label: "Authorization Info"
+    type: string
+    sql: ${TABLE}.resource ;;
+  }
+
+  dimension: granted {
+    group_label: "Authorization Info"
+    type: yesno
+    sql: ${TABLE}.granted ;;
+  }
 
 #     dimension: name {
 #       group_label: "Protopayload Auditlog Auth Info Resource"
@@ -513,11 +523,12 @@ measure: avg_denials_per_user {
 #       type: string
 #       sql: ${TABLE}.protopayload_auditlog.authorization_info.resource_attributes.type ;;
 #     }
-    }
+}
 
-view: activity_authentication_info {
-  sql_table_name: `cloudaudit_googleapis_com_activity.protopayload_auditlog.authentication_info` ;;
-  view_label: "Activity AuditLog"
+view: access_authentication_info {
+  sql_table_name: `cloudaudit_googleapis_com_data_access.protopayload_auditlog.authentication_info` ;;
+
+  view_label: "Auditlog"
   dimension: authority_selector {
     group_label: "Authentication Info"
     type: string
