@@ -1,5 +1,5 @@
 view: access {
-  sql_table_name: `allofthelogs.cloudaudit_googleapis_com_data_access`
+  sql_table_name: `security_logs.cloudaudit_googleapis_com_data_access`
     ;;
 
   #############

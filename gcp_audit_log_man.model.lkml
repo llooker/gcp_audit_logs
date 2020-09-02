@@ -1,4 +1,5 @@
-connection: "gcpsecurity-logs-bq"
+connection: "thelook_daily_updates"
+#"gcpsecurity-logs-bq"
 
 # include all the views
 include: "/views/**/*.view"

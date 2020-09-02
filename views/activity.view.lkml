@@ -1,5 +1,5 @@
 view: activity {
-  sql_table_name: `allofthelogs.cloudaudit_googleapis_com_activity`
+  sql_table_name: `security_logs.cloudaudit_googleapis_com_activity`
     ;;
 
  #############

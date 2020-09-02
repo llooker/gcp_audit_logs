@@ -12,7 +12,7 @@ view: failed_logins {
         ROW_NUMBER() OVER(PARTITION BY authentication_info.principalEmail ORDER BY authentication_info.principalEmail,activity.timestamp,activity.protopayload_auditlog.serviceName) RN1,
         -- number each login attempt by date, user, and whether it was successful. If same date and same user, sort by service
         ROW_NUMBER() OVER(PARTITION BY authentication_info.principalEmail, activity.protopayload_auditlog.serviceName, granted ORDER BY authentication_info.principalEmail,activity.timestamp,activity.protopayload_auditlog.serviceName) RN2
-      FROM `allofthelogs.cloudaudit_googleapis_com_activity`
+      FROM `looker-private-demo.security_logs.cloudaudit_googleapis_com_activity`
            AS activity
       LEFT JOIN UNNEST([activity.protopayload_auditlog]) as auditlog
       LEFT JOIN UNNEST(auditlog.authorizationInfo) as authorization_info
