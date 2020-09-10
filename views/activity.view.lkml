@@ -438,10 +438,16 @@ measure: avg_denials_per_user {
     sql: REGEXP_EXTRACT(${TABLE}.protopayload_auditlog.resourceName, '^projects/[^/]+/datasets/([^/]+)/tables')  ;;
   }
 
-  dimension: service_name {
-    view_label: "BigQuery"
+  dimension: service_name_raw {
+    hidden: yes
     type: string
     sql: ${TABLE}.protopayload_auditlog.serviceName ;;
+  }
+
+
+ dimension: service_name {
+    type: string
+    sql: SUBSTR(${service_name_raw}, 0, STRPOS(${service_name_raw}, ".") -1)  ;;
   }
 
   dimension: bytes_billed {
