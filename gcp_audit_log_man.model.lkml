@@ -4,6 +4,7 @@ connection: "thelook_daily_updates"
 # include all the views
 include: "/views/**/*.view"
 
+explore: findings_log {}
 
 explore: activity {
 
