@@ -40,6 +40,11 @@ explore: access {
     sql: LEFT JOIN UNNEST([${access_auditlog.authentication_info}]) as access_authentication_info ;;
     relationship: one_to_one
   }
+
+  join: resource_attributes {
+    sql: LEFT JOIN UNNEST([${access_authorization_info.resource_attributes}]) as resource_attributes ;;
+    relationship: one_to_one
+  }
 }
 
 

@@ -506,12 +506,6 @@ view: access_authorization_info {
     sql: ${TABLE}.granted ;;
   }
 
-#     dimension: name {
-#       group_label: "Protopayload Auditlog Auth Info Resource"
-#       type: string
-#       sql: ${TABLE}.protopayload_auditlog.authorization_info.resource_attributes.name ;;
-#     }
-#
 #     dimension: service {
 #       group_label: "Protopayload Auditlog Auth Info Resource"
 #       type: string
@@ -523,6 +517,10 @@ view: access_authorization_info {
 #       type: string
 #       sql: ${TABLE}.protopayload_auditlog.authorization_info.resource_attributes.type ;;
 #     }
+  dimension: resource_attributes {
+    hidden: yes
+    sql: ${TABLE}.resourceAttributes ;;
+  }
 }
 
 view: access_authentication_info {
@@ -545,6 +543,20 @@ view: access_authentication_info {
     group_label: "Authentication Info"
     type: string
     sql: ${TABLE}.principalSubject ;;
+  }
+  dimension: resource_attributes {
+    hidden: yes
+    sql: ${TABLE}.resourceAttributes ;;
+  }
+
+}
+
+view: resource_attributes {
+  sql_table_name: `cloudaudit_googleapis_com_data_access.protopayload_auditlog.authentication_info.resource_attributes` ;;
+
+  dimension: resource_attributes_name {
+    type: string
+    sql: ${TABLE}.name ;;
   }
 
 }
