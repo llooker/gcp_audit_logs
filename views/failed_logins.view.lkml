@@ -101,7 +101,7 @@ view: failed_logins {
   dimension: service_name_raw {
     hidden: yes
     type: string
-    sql: ${TABLE}.protopayload_auditlog.serviceName ;;
+    sql: ${TABLE}.service_name ;;
   }
 
   dimension: service_name {
