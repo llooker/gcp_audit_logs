@@ -35,10 +35,10 @@ view: activity {
       time,
       microsecond,
       millisecond,
-
       minute30,
       hour,
       date,
+      day_of_month,
       week,
       month,
       quarter,
@@ -61,6 +61,43 @@ view: activity {
     sql: ${TABLE}.receiveTimestamp ;;
   }
 
+  ###########
+  ## DEMO FIELDS
+  ## only used for demo purposes
+
+  measure: access_denials_demo {
+    group_label: "Demo Data"
+    description: "Used to make demo data more spiky"
+    label: "Access Denials"
+    type: sum
+    sql: CASE WHEN ${timestamp_day_of_month} IN (2, 16) THEN 3
+         WHEN ${timestamp_day_of_month} IN (9, 29) THEN 1.7
+         WHEN ${timestamp_day_of_month} IN (12, 22 ) THEN 0.4
+         ELSE 1 END ;;
+    filters: [activity_authorization_info.granted : "No"]
+  }
+
+  measure: access_grants_demo {
+    group_label: "Demo Data"
+    description: "Used to make demo data more spiky"
+    label: "Access Grants"
+    type: sum
+    sql: CASE WHEN ${timestamp_day_of_month} IN (3, 17) THEN 2.3
+         WHEN ${timestamp_day_of_month} IN (15, 27) THEN 0.7
+         WHEN ${timestamp_day_of_month} IN (10, 20 ) THEN 1.75
+         ELSE 1 END ;;
+    filters: [activity_authorization_info.granted : "Yes"]
+  }
+
+  measure: percent_failed_logins_demo {
+    group_label: "Demo Data"
+    description: "Used to make demo data more spiky"
+    label: "% Failed Logins"
+    type: number
+    value_format_name: percent_0
+    sql: ${access_denials_demo} / ${count} ;;
+  }
+
 
   ###########
   ## MEASURES
@@ -71,12 +108,37 @@ view: activity {
     drill_fields: [log_name]
   }
 
+
   measure: access_denials {
     description: "Count of Access Grants being Denied by a Service"
+    type: count
+    filters: [activity_authorization_info.granted : "No"]
+    drill_fields: [authentication_info.principal_email, timestamp_time, service_name, access_denials]
+  }
+
+  measure: access_grants {
+    description: "Count of Successful Access Grants"
     type: count
     filters: [activity_authorization_info.granted : "Yes"]
     drill_fields: [authentication_info.principal_email, timestamp_time, service_name, access_denials]
   }
+
+  measure: percent_failed_logins {
+    type: number
+    value_format_name: percent_0
+    sql: ${access_denials} / ${count} ;;
+  }
+
+
+  # measure: access_denials_demo {
+  #   #hidden: yes
+  #   description: "Used to make demo data more spiky"
+  #   type: number
+  #   sql: SUM(CASE WHEN ${timestamp_day_of_month} IN (2, 16, 29) THEN (9 * RAND())
+  #       ELSE 1 END) ;;
+  #   filters: [activity_authorization_info.granted : "No"]
+  #   drill_fields: [authentication_info.principal_email, timestamp_time, service_name, access_denials]
+  # }
 
 measure: avg_denials_per_user {
   type: number
