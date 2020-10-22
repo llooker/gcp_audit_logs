@@ -98,9 +98,15 @@ view: failed_logins {
     sql: ${TABLE}.activity_timestamp_date_time ;;
   }
 
+  dimension: service_name_raw {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.protopayload_auditlog.serviceName ;;
+  }
+
   dimension: service_name {
     type: string
-    sql: ${TABLE}.service_name ;;
+    sql: SUBSTR(${service_name_raw}, 0, STRPOS(${service_name_raw}, ".") -1)  ;;
   }
 
   dimension: principal_email {
