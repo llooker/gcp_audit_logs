@@ -67,7 +67,7 @@ view: activity {
 
   measure: access_denials_demo {
     group_label: "Demo Data"
-    description: "Used to make demo data more spiky"
+    description: "Used to make demo data more spiky "
     label: "Access Denials"
     type: sum
     sql: CASE WHEN ${timestamp_day_of_month} IN (2, 16) THEN 3
