@@ -71,31 +71,31 @@ view: setiampolicy_operation {
     dimension: granter_email {
       type: string
       sql: ${TABLE}.granterEmail ;;
-      action: {
-        label: "Investigate Elevated Access Privileges"
-        url: "https://desolate-refuge-53336.herokuapp.com/posts"
-        icon_url: "https://sendgrid.com/favicon.ico"
-        param: {
-          name: "some_auth_code"
-          value: "abc123456"
-        }
-        form_param: {
-          name: "Subject"
-          required: yes
-          default: "Investigating {{ setiampolicy_operation.grantee_email_clean._value }}'s Elevated Access"
-        }
-        form_param: {
-          name: "Body"
-          type: textarea
-          required: yes
-          default: "Dear {{ value }},
+      # action: {
+      #   label: "Investigate Elevated Access Privileges"
+      #   url: "https://desolate-refuge-53336.herokuapp.com/posts"
+      #   icon_url: "https://sendgrid.com/favicon.ico"
+      #   param: {
+      #     name: "some_auth_code"
+      #     value: "abc123456"
+      #   }
+      #   form_param: {
+      #     name: "Subject"
+      #     required: yes
+      #     default: "Investigating {{ setiampolicy_operation.grantee_email_clean._value }}'s Elevated Access"
+      #   }
+      #   form_param: {
+      #     name: "Body"
+      #     type: textarea
+      #     required: yes
+      #     default: "Dear {{ value }},
 
-          We noticed that you have granted {{ setiampolicy_operation.grantee_email_clean._value }}elevated access to the following projects:
-          {{ setiampolicy_operation.project_id._value }}
+      #     We noticed that you have granted {{ setiampolicy_operation.grantee_email_clean._value }}elevated access to the following projects:
+      #     {{ setiampolicy_operation.project_id._value }}
 
-          Please explain why this access was given, instead of using service account as dictated by standard policy."
-        }
-      }
+      #     Please explain why this access was given, instead of using service account as dictated by standard policy."
+      #   }
+      # }
     }
 
     dimension: type {
@@ -109,31 +109,31 @@ view: setiampolicy_operation {
     }
 
     dimension: grantee_email {
-      action: {
-        label: "Investigate Elevated Access Privileges"
-        url: "https://desolate-refuge-53336.herokuapp.com/posts"
-        icon_url: "https://sendgrid.com/favicon.ico"
-        param: {
-          name: "some_auth_code"
-          value: "abc123456"
-        }
-        form_param: {
-          name: "Subject"
-          required: yes
-          default: "Investigating {{ setiampolicy_operation.grantee_email_clean._value }}'s Elevated Access"
-        }
-        form_param: {
-          name: "Body"
-          type: textarea
-          required: yes
-          default: "Dear {{ setiampolicy_operation.grantee_email_clean._value }},
+      # action: {
+      #   label: "Investigate Elevated Access Privileges"
+      #   url: "https://desolate-refuge-53336.herokuapp.com/posts"
+      #   icon_url: "https://sendgrid.com/favicon.ico"
+      #   param: {
+      #     name: "some_auth_code"
+      #     value: "abc123456"
+      #   }
+      #   form_param: {
+      #     name: "Subject"
+      #     required: yes
+      #     default: "Investigating {{ setiampolicy_operation.grantee_email_clean._value }}'s Elevated Access"
+      #   }
+      #   form_param: {
+      #     name: "Body"
+      #     type: textarea
+      #     required: yes
+      #     default: "Dear {{ setiampolicy_operation.grantee_email_clean._value }},
 
-          We noticed that you have elevated access to the following projects:
-          {{ setiampolicy_operation.project_list._value }}
+      #     We noticed that you have elevated access to the following projects:
+      #     {{ setiampolicy_operation.project_list._value }}
 
-          Please explain why this access was given, instead of using service account as dictated by standard policy."
-        }
-      }
+      #     Please explain why this access was given, instead of using service account as dictated by standard policy."
+      #   }
+      # }
       type: string
       sql: ${TABLE}.grantee_email ;;
     }
