@@ -6,6 +6,8 @@ include: "/views/**/*.view"
 
 explore: findings_log {}
 
+explore: setiampolicy_operation {}
+
 explore: activity {
 
   join: activity_auditlog {
