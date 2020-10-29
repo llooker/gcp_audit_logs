@@ -32,7 +32,7 @@ view: setiampolicy_operation {
 
     measure: count {
       type: count
-      drill_fields: [detail*]
+      drill_fields: [granter_email, grantee_email, role, timestamp_minute]
     }
 
     measure: project_count {
