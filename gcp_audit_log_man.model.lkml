@@ -3,6 +3,9 @@ connection: "gcpsecurity-logs-bq"
 # include all the views
 include: "/views/**/*.view"
 
+datagroup: daily_group {
+  sql_trigger: SELECT CURRENT_DATE() ;;
+}
 
 explore: activity {
 
@@ -40,5 +43,10 @@ explore: access {
   }
 }
 
+explore: failed_logins {
+  always_filter: {
+    filters: [failed_logins.date_filter: "last 7 days"]
+  }
+}
 
-explore: failed_logins {}
+explore: security_logs {}
