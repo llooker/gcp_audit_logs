@@ -1,4 +1,5 @@
-connection: "gcpsecurity-logs-bq"
+connection: "thelook_daily_updates"
+#"gcpsecurity-logs-bq"
 
 # include all the views
 include: "/views/**/*.view"
@@ -6,6 +7,9 @@ include: "/views/**/*.view"
 datagroup: daily_group {
   sql_trigger: SELECT CURRENT_DATE() ;;
 }
+explore: findings_log {}
+
+explore: setiampolicy_operation {}
 
 explore: activity {
 
@@ -39,6 +43,11 @@ explore: access {
 
   join: access_authentication_info {
     sql: LEFT JOIN UNNEST([${access_auditlog.authentication_info}]) as access_authentication_info ;;
+    relationship: one_to_one
+  }
+
+  join: resource_attributes {
+    sql: LEFT JOIN UNNEST([${access_authorization_info.resource_attributes}]) as resource_attributes ;;
     relationship: one_to_one
   }
 }

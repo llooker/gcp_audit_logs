@@ -13,8 +13,8 @@ view: failed_logins {
         ROW_NUMBER() OVER(PARTITION BY activity.principal_email ORDER BY activity.principal_email, activity.activity_timestamp, activity.service_name) AS login_rank,
         ROW_NUMBER() OVER(PARTITION BY activity.principal_email, activity.service_name, granted ORDER BY activity.principal_email,activity.activity_timestamp,activity.service_name) AS login_grant_rank,
         LAG(activity.activity_timestamp) OVER (ORDER BY activity.principal_email, activity.activity_timestamp, activity.service_name) as previous_login_time
-
        from ${security_logs.SQL_TABLE_NAME} AS activity
+
 
       -- Only include logins for a given timeframe (variable that user needs to input)
       WHERE CAST(activity.activity_timestamp AS TIMESTAMP) >= {% date_start date_filter %} AND CAST(activity.activity_timestamp AS TIMESTAMP ) < {% date_end date_filter %}
@@ -100,7 +100,8 @@ view: failed_logins {
     sql: CAST(${TABLE}.activity_timestamp_date_time AS TIMESTAMP) ;;
   }
 
-  dimension: service_name {
+  dimension: service_name_raw {
+    hidden: yes
     type: string
     sql: ${TABLE}.service_name ;;
   }
@@ -108,6 +109,11 @@ view: failed_logins {
   dimension: event_id {
     type: number
     sql: ${TABLE}.event_id ;;
+  }
+
+  dimension: service_name {
+    type: string
+    sql: SUBSTR(${service_name_raw}, 0, STRPOS(${service_name_raw}, ".") -1)  ;;
   }
 
   dimension: principal_email {
