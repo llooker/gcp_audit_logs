@@ -537,6 +537,10 @@ view: access_authentication_info {
     group_label: "Authentication Info"
     type: string
     sql: ${TABLE}.principalEmail ;;
+    link: {
+      label: "Account Investigation"
+      url: "/dashboards-next/832?Principal+Email={{ value | encode_uri }}"
+    }
   }
 
   dimension: principal_subject {

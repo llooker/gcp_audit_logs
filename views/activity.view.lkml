@@ -19,14 +19,28 @@ view: activity {
     label: "Services Count"
     type: count_distinct
     sql: ${service_name} ;;
+    drill_fields: [drill1*]
   }
 
   measure: count_emails {
     label: "User Count"
     type: count_distinct
     sql:  ${activity_authentication_info.principal_email} ;;
+    drill_fields: [drill1*]
   }
 
+  # measure: ipv4_count {
+  #   label: "IPv4 Count"
+  #   type: count_distinct
+  #   sql: ${caller_ipv4} ;;
+  # }
+
+
+  # measure: ipv6_count {
+  #   label: "IPv6 Count"
+  #   type: count_distinct
+  #   sql: ${caller_ipv6} ;;
+  # }
 
   dimension_group: timestamp {
     type: time
@@ -75,7 +89,8 @@ view: activity {
          WHEN ${timestamp_day_of_month} IN (12, 22 ) THEN 0.4
          ELSE 1 END ;;
     filters: [activity_authorization_info.granted : "No"]
-  }
+    drill_fields: [drill1*]
+    }
 
   measure: access_grants_demo {
     group_label: "Demo Data"
@@ -87,6 +102,7 @@ view: activity {
          WHEN ${timestamp_day_of_month} IN (10, 20 ) THEN 1.75
          ELSE 1 END ;;
     filters: [activity_authorization_info.granted : "Yes"]
+    drill_fields: [drill1*]
   }
 
   measure: percent_failed_logins_demo {
@@ -96,6 +112,7 @@ view: activity {
     type: number
     value_format_name: percent_0
     sql: ${access_denials_demo} / ${count} ;;
+    drill_fields: [drill1*]
   }
 
 
@@ -105,7 +122,7 @@ view: activity {
   measure: count {
     label: "Activity Count"
     type: count
-    drill_fields: [log_name]
+    drill_fields: [drill1*]
   }
 
 
@@ -113,21 +130,22 @@ view: activity {
     description: "Count of Access Grants being Denied by a Service"
     type: count
     filters: [activity_authorization_info.granted : "No"]
-    drill_fields: [authentication_info.principal_email, timestamp_time, service_name, access_denials]
-  }
+    drill_fields: [drill1*]
+    }
 
   measure: access_grants {
     description: "Count of Successful Access Grants"
     type: count
     filters: [activity_authorization_info.granted : "Yes"]
-    drill_fields: [authentication_info.principal_email, timestamp_time, service_name, access_denials]
-  }
+    drill_fields: [drill1*]
+    }
 
   measure: percent_failed_logins {
     type: number
     value_format_name: percent_0
     sql: ${access_denials} / ${count} ;;
-  }
+    drill_fields: [drill1*]
+    }
 
 
   # measure: access_denials_demo {
@@ -255,6 +273,32 @@ measure: avg_denials_per_user {
     type: string
     sql: ${TABLE}.protopayload_auditlog.requestMetadata.callerIp ;;
   }
+
+  dimension: caller_ipv4 {
+    view_label: "Activity AuditLog"
+    group_label: "Request Metadata"
+    type: string
+    sql: CASE WHEN REGEXP_CONTAINS(${caller_ip}, r":") THEN null ELSE ${caller_ip} END;;
+  }
+
+  dimension: caller_ipv6 {
+    view_label: "Activity AuditLog"
+    group_label: "Request Metadata"
+    sql: CASE WHEN REGEXP_CONTAINS(${caller_ip}, r":") THEN ${caller_ip} ELSE null END ;;
+
+  }
+
+  dimension: class_b {
+    # sql: TRUNC(NET.IPV4_TO_INT64(NET.SAFE_IP_FROM_STRING(${caller_ip}))/(256*256));;
+    sql: NET.SAFE_IP_FROM_STRING(${caller_ipv4});;
+    hidden: no
+  }
+
+  dimension: class_bb {
+    sql: NET.IPV4_TO_INT64(${class_b}) ;;
+  }
+
+
 
   dimension: caller_network {
     view_label: "Activity AuditLog"
@@ -517,6 +561,10 @@ measure: avg_denials_per_user {
     type: number
     sql:  ${TABLE}.protopayload_auditlog.servicedata_v1_bigquery.jobCompletedEvent.job.jobStatistics.totalBilledBytes ;;
   }
+
+  set: drill1 {
+    fields: [service_name, timestamp_time, activity_authorization_info.granted, resource]
+  }
 }
 
 
@@ -596,6 +644,10 @@ view: activity_authentication_info {
     group_label: "Authentication Info"
     type: string
     sql: ${TABLE}.principalEmail ;;
+    link: {
+      label: "Account Investigation"
+      url: "/dashboards-next/832?Principal+Email={{ value | encode_uri }}"
+    }
   }
 
   dimension: principal_subject {

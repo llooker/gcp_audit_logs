@@ -12,6 +12,9 @@ explore: findings_log {}
 explore: setiampolicy_operation {}
 
 explore: activity {
+  always_filter: {
+    filters: [activity.timestamp_date: "3 days"]
+  }
 
   join: activity_auditlog {
     sql: LEFT JOIN UNNEST([${activity.protopayload_auditlog}]) as activity_auditlog ;;
