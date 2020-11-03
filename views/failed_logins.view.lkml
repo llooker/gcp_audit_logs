@@ -73,8 +73,8 @@ view: failed_logins {
       LEFT JOIN login_facts ON login_facts.principal_email = conseq_logins.principal_email AND login_facts.service_name = conseq_logins.service_name
       LEFT JOIN max_failed_login ON max_failed_login.principal_email = conseq_logins.principal_email AND max_failed_login.service_name = conseq_logins.service_name
 
-      WHERE ((conseq_logins.conseq_login_rank >= {% parameter failed_login_threshold %} AND conseq_logins.granted = 'No') OR (conseq_logins.granted = 'Yes' AND conseq_logins.previous_login_time = max_failed_login.max_failed_login_time AND login_facts.max_not_granted_rank >= {% parameter failed_login_threshold %}))
-           and login_facts.latest_successful_login >= max_failed_login.max_failed_login_time
+     WHERE ((conseq_logins.conseq_login_rank >= {% parameter failed_login_threshold %} AND conseq_logins.granted = 'No') OR (conseq_logins.granted = 'Yes' AND conseq_logins.previous_login_time = max_failed_login.max_failed_login_time AND login_facts.max_not_granted_rank >= {% parameter failed_login_threshold %}))
+       and login_facts.latest_successful_login >= max_failed_login.max_failed_login_time
 
       GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13
       ORDER BY 3,5;;
