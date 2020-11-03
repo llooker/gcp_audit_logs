@@ -67,9 +67,35 @@ view: findings_log {
     sql: ${TABLE}.securityMarks ;;
   }
 
+  dimension: source {
+    hidden: yes
+    sql: ${TABLE}.source ;;
+  }
+
+  dimension: source_display_name {
+    type: string
+    sql: ${TABLE}.source.displayName ;;
+  }
+
+
   dimension: source_properties {
+    hidden:no
     type: string
     sql: ${TABLE}.sourceProperties ;;
+  }
+
+  # dimension: compromised_account {
+  #   type: string
+  #   sql: ${TABLE}.sourceProperties.compromisedAccount ;;
+  # }
+
+  dimension: compromised_account {
+    type: string
+    sql: JSON_EXTRACT_SCALAR(${TABLE}.sourceProperties, "$.compromised_account") ;;
+    link: {
+      label: "Account Investigation"
+      url: "/dashboards-next/832?Principal+Email={{ value | encode_uri }}"
+    }
   }
 
   dimension: severity {
@@ -91,7 +117,7 @@ view: findings_log {
 
   measure: count {
     type: count
-    drill_fields: [name, resource_name]
+    drill_fields: [source_display_name, category, severity, compromised_account, resource_name]
   }
 
 

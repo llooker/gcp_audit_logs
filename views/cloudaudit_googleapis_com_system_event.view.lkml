@@ -1,4 +1,4 @@
-view: cloudaudit_googleapis_com_system_event {
+view: system_event {
   sql_table_name: `looker-private-demo.security_logs.cloudaudit_googleapis_com_system_event`
     ;;
 

@@ -537,7 +537,7 @@ measure: avg_denials_per_user {
 
     ### IDK How to deal with the @ in the key name
     dimension: type {
-      sql: ${TABLE}.\@type ;;
+      sql: json_extract_scalar(replace(protopayload_auditlog.requestJson, '@type', 'type'),"$.type") ;;
     }
   }
 
