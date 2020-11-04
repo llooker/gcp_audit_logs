@@ -60,6 +60,27 @@ view: findings_log {
   dimension: resource_name {
     type: string
     sql: ${TABLE}.resourceName ;;
+    action: {
+      label: "Email Resource Owner"
+      url: "https://desolate-refuge-53336.herokuapp.com/posts"
+      icon_url: "https://sendgrid.com/favicon.ico"
+      param: {
+        name: "some_auth_code"
+        value: "abc123456"
+      }
+      form_param: {
+        name: "Subject"
+        required: yes
+        default: "[URGENT] - Resource vulnerabilities identified"
+      }
+      form_param: {
+        name: "Body"
+        type: textarea
+        required: yes
+        default:
+        "Resource {{ value }} is out of compliance and needs to be addressed. Please resolve or contact sre@mycompany.com ASAP"
+      }
+    }
   }
 
   dimension: security_marks {
