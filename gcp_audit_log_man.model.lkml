@@ -31,7 +31,20 @@ explore: activity {
     relationship: one_to_one
   }
 
+  join: ip_to_geography_lookup {
+    view_label: "Source IP Geography"
+    type: inner
+    relationship: many_to_one
+    # note: this only works for IPv4 address right now, not IPv6
+    sql_on:
+    ${ip_to_geography_lookup.class_b} = ${activity.class_b} AND
+    ${activity.caller_ipv4} BETWEEN ${ip_to_geography_lookup.start_ipv4_to_int64}
+    and ${ip_to_geography_lookup.end_ipv4_int64};;
+
+  }
+
 }
+
 
 explore: access {
   join: access_auditlog {

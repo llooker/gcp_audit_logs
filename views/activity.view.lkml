@@ -277,26 +277,33 @@ measure: avg_denials_per_user {
   dimension: caller_ipv4 {
     view_label: "Activity AuditLog"
     group_label: "Request Metadata"
-    type: string
-    sql: CASE WHEN REGEXP_CONTAINS(${caller_ip}, r":") THEN null ELSE ${caller_ip} END;;
+    type: number
+    sql: CASE WHEN REGEXP_CONTAINS(${caller_ip}, r":") THEN 0
+         ELSE NET.IPV4_TO_INT64(NET.SAFE_IP_FROM_STRING(${caller_ip}))
+         END;;
+#REGEXP_CONTAINS(${caller_ip}, r":") THEN null
+#${caller_ip} LIKE '%:%' THEN NULL
   }
 
-  dimension: caller_ipv6 {
-    view_label: "Activity AuditLog"
-    group_label: "Request Metadata"
-    sql: CASE WHEN REGEXP_CONTAINS(${caller_ip}, r":") THEN ${caller_ip} ELSE null END ;;
+  # dimension: caller_ipv6 {
+  #   view_label: "Activity AuditLog"
+  #   group_label: "Request Metadata"
+  #   sql: CASE WHEN REGEXP_CONTAINS(${caller_ip}, r":") THEN ${caller_ip} ELSE null END ;;
 
-  }
+  # }
 
   dimension: class_b {
     # sql: TRUNC(NET.IPV4_TO_INT64(NET.SAFE_IP_FROM_STRING(${caller_ip}))/(256*256));;
-    sql: NET.SAFE_IP_FROM_STRING(${caller_ipv4});;
-    hidden: no
+    sql:
+    CASE WHEN REGEXP_CONTAINS(${caller_ip}, r":") THEN 0
+    ELSE TRUNC(NET.IPV4_TO_INT64(NET.IP_FROM_STRING(${caller_ip}))/(256*256))
+    END     ;;
+    hidden: yes
   }
 
-  dimension: class_bb {
-    sql: NET.IPV4_TO_INT64(${class_b}) ;;
-  }
+  # dimension: class_bb {
+  #   sql: NET.IPV4_TO_INT64(${class_b}) ;;
+  # }
 
 
 
