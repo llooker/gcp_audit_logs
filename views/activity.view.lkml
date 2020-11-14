@@ -634,6 +634,12 @@ measure: avg_denials_per_user {
       group_label: "Authorization Info"
       type: yesno
       sql: ${TABLE}.granted ;;
+      html:
+      {% if value == 'Granted' %}
+      <div style="background: #8BC34A; border-radius: 2px; color: #fff; display: inline-block; font-size: 11px; font-weight: bold; line-height: 1; padding: 3px 4px; width: 100%; text-align: center;">{{ rendered_value }}</div>
+      {% elsif value == 'Denied' %}
+      <div style="background:  #FF0000; border-radius: 2px; color: #fff; display: inline-block; font-size: 11px; font-weight: bold; line-height: 1; padding: 3px 4px; width: 100%; text-align: center;">{{ rendered_value }}</div>
+      {% endif %} ;;
     }
 
 #     dimension: name {
