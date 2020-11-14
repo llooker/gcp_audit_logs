@@ -15,6 +15,13 @@ view: activity {
     sql: ${TABLE}.severity ;;
   }
 
+  dimension: added_permissions {
+    type: string
+    # sql: TO_JSON_STRING(${TABLE}.protopayload_auditlog.servicedata_v1_iam_admin.permissionDelta.addedPermissions)  ;;
+    sql: FORMAT("%T", ${TABLE}.protopayload_auditlog.servicedata_v1_iam_admin.permissionDelta.addedPermissions)  ;;
+  }
+
+
   measure: count_services {
     label: "Services Count"
     type: count_distinct
@@ -576,6 +583,12 @@ measure: avg_denials_per_user {
   set: drill1 {
     fields: [service_name, timestamp_time, activity_authorization_info.granted, resource]
   }
+
+  # can't use dot notation to get to fields within authorization info because it's an array
+  dimension: perm2 {
+    type: string
+    sql: ${TABLE}.protopayload_auditlog.authorizationInfo.permission ;;
+  }
 }
 
 
@@ -594,7 +607,7 @@ measure: avg_denials_per_user {
       sql: ${TABLE}.authenticationInfo ;;
     }
 
-    ### IDK How to deal with the @ in the key name
+    ### deal with the @ in the key name
     dimension: type {
       sql: json_extract_scalar(replace(protopayload_auditlog.requestJson, '@type', 'type'),"$.type") ;;
     }

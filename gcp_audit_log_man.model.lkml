@@ -9,6 +9,8 @@ datagroup: daily_group {
 }
 explore: findings_log {}
 
+explore: system_event {}
+
 explore: setiampolicy_operation {}
 
 explore: activity {
