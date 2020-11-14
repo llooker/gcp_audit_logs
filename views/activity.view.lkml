@@ -678,6 +678,27 @@ view: activity_authentication_info {
       label: "Account Investigation"
       url: "/dashboards-next/832?Principal+Email={{ value | encode_uri }}"
     }
+    action: {
+      label: "Email This Principal Email Address"
+      url: "https://desolate-refuge-53336.herokuapp.com/posts"
+      icon_url: "https://sendgrid.com/favicon.ico"
+      param: {
+        name: "some_auth_code"
+        value: "abc123456"
+      }
+      form_param: {
+        name: "Subject"
+        required: yes
+        default: ""
+      }
+      form_param: {
+        name: "Body"
+        type: textarea
+        required: yes
+        default:
+        ""
+      }
+    }
   }
 
   dimension: principal_subject {
