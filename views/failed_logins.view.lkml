@@ -119,6 +119,10 @@ view: failed_logins {
   dimension: principal_email {
     type: string
     sql: ${TABLE}.principal_email ;;
+    link: {
+      label: "Account Investigation"
+      url: "/dashboards-next/832?Principal+Email={{ value | encode_uri }}"
+    }
   }
 
   dimension: granted {
