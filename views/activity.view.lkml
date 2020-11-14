@@ -285,7 +285,9 @@ measure: avg_denials_per_user {
     view_label: "Activity AuditLog"
     group_label: "Request Metadata"
     type: number
-    sql: CASE WHEN REGEXP_CONTAINS(${caller_ip}, r":") THEN 0
+    sql: CASE
+         WHEN REGEXP_CONTAINS(${caller_ip}, r":") THEN 0
+         WHEN REGEXP_CONTAINS(${caller_ip}, r"-") THEN 0
          ELSE NET.IPV4_TO_INT64(NET.SAFE_IP_FROM_STRING(${caller_ip}))
          END;;
 #REGEXP_CONTAINS(${caller_ip}, r":") THEN null
@@ -302,7 +304,9 @@ measure: avg_denials_per_user {
   dimension: class_b {
     # sql: TRUNC(NET.IPV4_TO_INT64(NET.SAFE_IP_FROM_STRING(${caller_ip}))/(256*256));;
     sql:
-    CASE WHEN REGEXP_CONTAINS(${caller_ip}, r":") THEN 0
+    CASE
+         WHEN REGEXP_CONTAINS(${caller_ip}, r":") THEN 0
+         WHEN REGEXP_CONTAINS(${caller_ip}, r"-") THEN 0
     ELSE TRUNC(NET.IPV4_TO_INT64(NET.IP_FROM_STRING(${caller_ip}))/(256*256))
     END     ;;
     hidden: yes
@@ -630,6 +634,12 @@ measure: avg_denials_per_user {
       group_label: "Authorization Info"
       type: yesno
       sql: ${TABLE}.granted ;;
+      html:
+      {% if value == 'Granted' %}
+      <div style="background: #8BC34A; border-radius: 2px; color: #fff; display: inline-block; font-size: 11px; font-weight: bold; line-height: 1; padding: 3px 4px; width: 100%; text-align: center;">{{ rendered_value }}</div>
+      {% elsif value == 'Denied' %}
+      <div style="background:  #FF0000; border-radius: 2px; color: #fff; display: inline-block; font-size: 11px; font-weight: bold; line-height: 1; padding: 3px 4px; width: 100%; text-align: center;">{{ rendered_value }}</div>
+      {% endif %} ;;
     }
 
 #     dimension: name {

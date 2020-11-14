@@ -100,6 +100,12 @@ view: ip_to_geography_lookup {
     sql: ${TABLE}.country_iso_code ;;
   }
 
+  dimension: is_unexpected_country {
+    description: "We would not expect traffic from these countries"
+    type: yesno
+    sql: ${country_iso_code} IN ('RU', 'CN', 'IR') ;;
+  }
+
   dimension: country_name {
     type: string
     sql: ${TABLE}.country_name ;;
