@@ -577,7 +577,7 @@ measure: avg_denials_per_user {
   }
 
   set: drill1 {
-    fields: [service_name, timestamp_time, activity_authorization_info.granted, resource]
+    fields: [service_name, timestamp_time, activity_authorization_info.granted, resource_name]
   }
 
   # can't use dot notation to get to fields within authorization info because it's an array
