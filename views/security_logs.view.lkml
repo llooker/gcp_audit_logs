@@ -6,12 +6,6 @@ view: security_logs {
     # datagroup_trigger: daily_group
     sql:
       SELECT
-        CURRENT_DATETIME() AS activity_timestamp, 'bigquery.googleapis.com' AS service_name, 'foo@google.com' AS principal_email, 'No' AS granted
-      UNION ALL
-      SELECT
-         DATETIME_SUB(CURRENT_DATETIME(), INTERVAL 1 MINUTE) AS activity_timestamp, 'bigquery.googleapis.com' AS service_name, 'foo@google.com' AS principal_email, 'No' AS granted
-      UNION ALL
-      SELECT
         DATETIME_SUB(CURRENT_DATETIME(), INTERVAL 2 MINUTE) AS activity_timestamp, 'bigquery.googleapis.com' AS service_name, 'foo@google.com' AS principal_email, 'Yes' AS granted
       UNION ALL
       SELECT
