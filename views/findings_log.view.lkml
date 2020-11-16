@@ -256,4 +256,14 @@ view: findings_log {
     type: string
     sql: ${TABLE}.asset.securityCenterProperties.resourceType ;;
   }
+
+  dimension: scc_logo {
+    hidden: yes
+    type: number
+    sql: 1 ;;
+    html: <img src="https://res.cloudinary.com/stackrox/w_400,dpr_3.0,c_scale,fl_lossy,f_auto/v1579719223/Cloud-Security-Command-Center-1_spuod2.jpg"
+           height="150" width="150";;
+
+  }
+
 }
