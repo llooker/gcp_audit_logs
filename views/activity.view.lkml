@@ -117,7 +117,7 @@ view: activity {
     description: "Used to make demo data more spiky"
     label: "% Failed Logins"
     type: number
-    value_format_name: percent_0
+    value_format_name: percent_2
     sql: ${access_denials_demo} / ${count} ;;
     drill_fields: [drill1*]
   }
@@ -149,7 +149,7 @@ view: activity {
 
   measure: percent_failed_logins {
     type: number
-    value_format_name: percent_0
+    value_format_name: percent_2
     sql: ${access_denials} / ${count} ;;
     drill_fields: [drill1*]
     }
