@@ -2,6 +2,7 @@ include: "dashboards/*.lookml"
 include: "dashboards/*.lookml"
 include: "dashboards/*.lookml"
 include: "dashboards/*.lookml"
+include: "dashboards/*.lookml"
 connection: "looker-private-demo"
 #"gcpsecurity-logs-bq"
 
