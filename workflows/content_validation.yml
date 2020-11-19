@@ -1,8 +1,8 @@
 name: content_validate
 env:
-  DEMO_NAME: Retail Banking
-  PROJECT_NAME: retail_banking
-  HOST: demoexpo
+  DEMO_NAME: Security
+  PROJECT_NAME: gcp_audit_log_manual
+  HOST: googlecloud
 on:
   schedule:
     - cron: '0 4 * * 1-5' 
