@@ -4,9 +4,9 @@
 name: spectacles
 
 env:
-  DEMO_NAME: Retail Banking
-  PROJECT_NAME: retail_banking
-  HOST: demoexpo
+  DEMO_NAME: Security
+  PROJECT_NAME: gcp_audit_log_manual
+  HOST: googlecloud
 on:
   pull_request:
     branches: [ master ]
