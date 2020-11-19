@@ -1,4 +1,4 @@
-connection: "thelook_daily_updates"
+connection: "looker-private-demo"
 #"gcpsecurity-logs-bq"
 
 # include all the views
