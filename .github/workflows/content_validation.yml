@@ -5,8 +5,8 @@ env:
   HOST: googlecloud
   ACTIONS_ALLOW_UNSECURE_COMMANDS: true
 on:
-  schedule:
-    - cron: '0 4 * * 1-5' 
+#   schedule:
+#     - cron: '0 4 * * 1-5' 
   workflow_dispatch:
 
 jobs:
