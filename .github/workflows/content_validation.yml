@@ -60,6 +60,7 @@ jobs:
     - name: Set Variables
       if: success() || failure()
       run: |
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         ERRORS=$(cat .github/dashboard_errors.txt) 
         NEW_DASHS=$(cat .github/new_dashboards.txt) 
         echo "::set-env name=ERRORS::$ERRORS" 
