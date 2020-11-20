@@ -4,6 +4,7 @@ connection: "looker-private-demo"
 # include all the views
 include: "/views/**/*.view"
 
+
 datagroup: daily_group {
   sql_trigger: SELECT CURRENT_DATE() ;;
 }
