@@ -607,6 +607,11 @@ measure: avg_denials_per_user {
     dimension: type {
       sql: json_extract_scalar(replace(protopayload_auditlog.requestJson, '@type', 'type'),"$.type") ;;
     }
+
+    dimension: account_id {
+      sql: json_extract_scalar(protopayload_auditlog.requestJson,"$.account_id") ;;
+    }
+
   }
 
 

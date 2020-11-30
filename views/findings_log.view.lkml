@@ -1,8 +1,7 @@
 view: findings_log {
   sql_table_name: `looker-private-demo.security_logs.findings_log`
     ;;
-
-# alternatively use Shad's view: https://googlecloud.looker.com/projects/scc_findings/files/findings_log.view.lkml
+    view_label: "SCC Findings"
 
   dimension: asset {
     hidden: yes
@@ -227,11 +226,6 @@ view: findings_log {
     type: string
     sql: ${TABLE}.asset.securityCenterProperties.resourceName ;;
   }
-
-#   dimension: resource_owners {
-#     type: string
-#     sql: ${TABLE}.asset.securityCenterProperties.resourceOwners ;;
-#   }
 
   dimension: resource_parent {
     type: string
