@@ -122,6 +122,7 @@ view: failed_logins {
     link: {
       label: "Account Investigation"
       url: "/dashboards-next/832?Principal+Email={{ value | encode_uri }}"
+      icon_url: "https://www.looker.com/favicon.ico"
     }
   }
 
@@ -170,6 +171,12 @@ view: failed_logins {
     label: "Max # of Consecutive Denies"
     type: number
     sql: ${TABLE}.max_not_granted_rank ;;
+  }
+
+  measure: brute_force_attacks {
+    type: count_distinct
+    sql: ${principal_email} ;;
+    drill_fields: [activity_timestamp_date_time_time, principal_email, service_name, granted]
   }
 
   set: detail {

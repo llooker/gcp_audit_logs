@@ -119,7 +119,7 @@ view: activity {
     description: "Used to make demo data more spiky"
     label: "% Failed Logins"
     type: number
-    value_format_name: percent_0
+    value_format_name: percent_2
     sql: ${access_denials_demo} / ${count} ;;
     drill_fields: [drill1*]
   }
@@ -151,7 +151,7 @@ view: activity {
 
   measure: percent_failed_logins {
     type: number
-    value_format_name: percent_0
+    value_format_name: percent_2
     sql: ${access_denials} / ${count} ;;
     drill_fields: [drill1*]
     }
@@ -631,9 +631,9 @@ measure: avg_denials_per_user {
       type: yesno
       sql: ${TABLE}.granted ;;
       html:
-      {% if value == 'Granted' %}
+      {% if value == 'Yes' %}
       <div style="background: #8BC34A; border-radius: 2px; color: #fff; display: inline-block; font-size: 11px; font-weight: bold; line-height: 1; padding: 3px 4px; width: 100%; text-align: center;">{{ rendered_value }}</div>
-      {% elsif value == 'Denied' %}
+      {% elsif value == 'No' %}
       <div style="background:  #FF0000; border-radius: 2px; color: #fff; display: inline-block; font-size: 11px; font-weight: bold; line-height: 1; padding: 3px 4px; width: 100%; text-align: center;">{{ rendered_value }}</div>
       {% endif %} ;;
     }
