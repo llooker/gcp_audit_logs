@@ -9,8 +9,6 @@ datagroup: daily_group {
 }
 explore: findings_log {}
 
-explore: system_event {}
-
 explore: setiampolicy_operation {}
 
 explore: activity {
@@ -34,7 +32,7 @@ explore: activity {
   }
 
   join: ip_to_geography_lookup {
-    view_label: "Source IP Geography"
+    view_label: "Admin Activity"
     type: inner
     relationship: many_to_one
     # note: this only works for IPv4 address right now, not IPv6

@@ -1,6 +1,7 @@
 view: activity {
   sql_table_name: `security_logs.cloudaudit_googleapis_com_activity`
     ;;
+  label: "Admin Activity"
 
  #############
  ## DIMENSIONS
@@ -69,6 +70,7 @@ view: activity {
   }
 
   dimension_group: receive {
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -206,42 +208,39 @@ measure: avg_denials_per_user {
 
 
   dimension: requesttest {
-    view_label: "Activity AuditLog"
     sql: ${TABLE}.protopayload_auditlog.request.name ;;
   }
 
   dimension: metadata_json {
-    view_label: "Activity AuditLog"
     type: string
     sql: ${TABLE}.protopayload_auditlog.metadataJson ;;
   }
 
   dimension: method_name {
-    view_label: "Activity AuditLog"
     type: string
     sql: ${TABLE}.protopayload_auditlog.methodName ;;
   }
 
   dimension: num_response_items {
-    view_label: "Activity AuditLog"
+
     type: number
     sql: ${TABLE}.protopayload_auditlog.numResponseItems ;;
   }
 
   dimension: request_json {
-    view_label: "Activity AuditLog"
+
     type: string
     sql: ${TABLE}.protopayload_auditlog.requestJson ;;
   }
 
   dimension: resource_name {
-    view_label: "Activity AuditLog"
+
     type: string
     sql: ${TABLE}.protopayload_auditlog.resourceName ;;
   }
 
   dimension: table_name {
-    view_label: "Activity AuditLog"
+
     type: string
     sql: REGEXP_EXTRACT(${TABLE}.protopayload_auditlog.resourceName, '^projects/[^/]+/datasets/[^/]+/tables/(.*)$')  ;;
   }
@@ -261,28 +260,28 @@ measure: avg_denials_per_user {
   }
 
   dimension: code {
-    view_label: "Activity AuditLog"
+
     group_label: "Status"
     type: number
     sql: ${TABLE}.protopayload_auditlog.status.code ;;
   }
 
   dimension: message {
-    view_label: "Activity AuditLog"
+
     group_label: "Status"
     type: string
     sql: ${TABLE}.protopayload_auditlog.status.message ;;
   }
 
   dimension: caller_ip {
-    view_label: "Activity AuditLog"
+
     group_label: "Request Metadata"
     type: string
     sql: ${TABLE}.protopayload_auditlog.requestMetadata.callerIp ;;
   }
 
   dimension: caller_ipv4 {
-    view_label: "Activity AuditLog"
+
     group_label: "Request Metadata"
     type: number
     sql: CASE
@@ -319,14 +318,14 @@ measure: avg_denials_per_user {
 
 
   dimension: caller_network {
-    view_label: "Activity AuditLog"
+
     group_label: "Request Metadata"
     type: string
     sql: ${TABLE}.protopayload_auditlog.requestMetadata.callerNetwork ;;
   }
 
   dimension: caller_supplied_user_agent {
-    view_label: "Activity AuditLog"
+
     group_label: "Request Metadata"
     type: string
     sql: ${TABLE}.protopayload_auditlog.requestMetadata.callerSuppliedUserAgent ;;
@@ -560,6 +559,7 @@ measure: avg_denials_per_user {
     view_label: "BigQuery"
     type: string
     sql: REGEXP_EXTRACT(${TABLE}.protopayload_auditlog.resourceName, '^projects/[^/]+/datasets/([^/]+)/tables')  ;;
+    hidden: yes
   }
 
   dimension: service_name_raw {
@@ -572,22 +572,18 @@ measure: avg_denials_per_user {
  dimension: service_name {
     type: string
     sql: SUBSTR(${service_name_raw}, 0, STRPOS(${service_name_raw}, ".") -1)  ;;
+    hidden: yes
   }
 
   dimension: bytes_billed {
     view_label: "BigQuery"
     type: number
     sql:  ${TABLE}.protopayload_auditlog.servicedata_v1_bigquery.jobCompletedEvent.job.jobStatistics.totalBilledBytes ;;
+    hidden: yes
   }
 
   set: drill1 {
     fields: [service_name, timestamp_time, activity_authorization_info.granted, resource_name]
-  }
-
-  # can't use dot notation to get to fields within authorization info because it's an array
-  dimension: perm2 {
-    type: string
-    sql: ${TABLE}.protopayload_auditlog.authorizationInfo.permission ;;
   }
 }
 
@@ -595,7 +591,7 @@ measure: avg_denials_per_user {
   ##########
   ## ARRAYS and NESTING
   view: activity_auditlog {
-    view_label: "Activity AuditLog"
+    view_label: "Admin Activity"
     sql_table_name: `cloudaudit_googleapis_com_activity.protopayload_auditlog` ;;
 
     dimension: authorization_info {
@@ -616,7 +612,7 @@ measure: avg_denials_per_user {
 
   view: activity_authorization_info {
     sql_table_name: `cloudaudit_googleapis_com_activity.protopayload_auditlog.authorization_info` ;;
-    view_label: "Activity AuditLog"
+    view_label: "Admin Activity"
 
     dimension: permission {
       group_label: "Authorization Info"
@@ -663,7 +659,7 @@ measure: avg_denials_per_user {
 
 view: activity_authentication_info {
   sql_table_name: `cloudaudit_googleapis_com_activity.protopayload_auditlog.authentication_info` ;;
-  view_label: "Activity AuditLog"
+  view_label: "Admin Activity"
   dimension: authority_selector {
     group_label: "Authentication Info"
     type: string
