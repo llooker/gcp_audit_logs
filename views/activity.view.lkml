@@ -221,6 +221,109 @@ measure: avg_denials_per_user {
     sql: ${TABLE}.protopayload_auditlog.methodName ;;
   }
 
+  measure: persistence_cloud_identity {
+    label: "Persistence - Cloud Identity"
+    group_label: "MITRE ATT&CK Metrics"
+    type: count
+    filters: [
+     method_name: "google.admin.AdminService.createRole, google.admin.AdminService.createUser, google.admin.AdminService.assignRole, google.admin.AdminService.addGroupMember"
+    ]
+    drill_fields: [method_name, persistence_cloud_identity]
+  }
+
+  measure: persistence_gce {
+    label: "Persistence - GCE"
+    group_label: "MITRE ATT&CK Metrics"
+    type: count
+    filters: [
+      method_name: "v1.compute.disks.createSnapshot, Beta.compute.instances.insert, instances.setMetadata"
+    ]
+    drill_fields: [method_name]
+  }
+
+  measure: persistence_iam {
+    label: "Persistence - IAM"
+    group_label: "MITRE ATT&CK Metrics"
+    type: count
+    filters: [
+      method_name: "google.iam.admin.v1.CreateServiceAccountKey, google.iam.admin.v1.SetIAMPolicy, CreateServiceAccount"
+    ]
+    drill_fields: [method_name]
+  }
+
+  measure: persistence_cloud_functions {
+    label: "Persistence - Cloud Functions"
+    group_label: "MITRE ATT&CK Metrics"
+    type: count
+    filters: [
+      method_name: "google.cloud.functions.v1.CloudFunctionsService.CreateFunction, google.cloud.functions.v1.CloudFunctionsService.UpdateFunction"
+    ]
+    drill_fields: [method_name]
+  }
+
+  measure: initial_access_console_CLI {
+    label: "Initial Access - Console/CLI"
+    group_label: "MITRE ATT&CK Metrics"
+    type: count
+    filters: [
+      method_name: "LoginService.loginSuccess, LoginService.loginFailure"
+    ]
+    drill_fields: [method_name]
+  }
+
+  measure: privilege_escalation_cloud_identity {
+    label: "Privilege Escalation - Cloud Identity"
+    group_label: "MITRE ATT&CK Metrics"
+    type: count
+    filters: [
+      method_name: "google.admin.AdminService.addGroupMember, google.admin.AdminService.updateAccessLevelV2, google.admin.AdminService.assignRole, google.admin.AdminService.createAccessLevelV2, google.admin.AdminService.createRole, google.admin.AdminService.changeGroupSetting"
+    ]
+    drill_fields: [method_name]
+  }
+
+  measure: privilege_escalation_iam {
+    label: "Privilege Escalation - IAM"
+    group_label: "MITRE ATT&CK Metrics"
+    type: count
+    filters: [
+      method_name: "google.iam.admin.v1.UpdateRole, google.iam.admin.v1.SetIAMPolicy, google.iam.admin.v1.CreateRole"
+    ]
+    drill_fields: [method_name]
+  }
+
+  measure: privilege_escalation_access_context_manager {
+    label: "Privilege Escalation - Access Context Manager"
+    group_label: "MITRE ATT&CK Metrics"
+    type: count
+    filters: [
+      method_name: "google.identity.accesscontextmanager.v1.AccessContextManager.UpdateAccessLevel, google.identity.accesscontextmanager.v1.AccessContextManager.UpdateServicePerimeter, google.identity.accesscontextmanager.v1.AccessContextManager.CreateAccessLevel"
+    ]
+    drill_fields: [method_name]
+  }
+
+  measure: privilege_escalation_total {
+    label: "Privilege Escalation - Total"
+    group_label: "MITRE ATT&CK Totals"
+    type: number
+    sql: ${privilege_escalation_cloud_identity} + ${privilege_escalation_iam} + ${privilege_escalation_access_context_manager} ;;
+    drill_fields: [method_name]
+  }
+
+  measure: initial_access_total {
+    label: "Initial Access - Total"
+    group_label: "MITRE ATT&CK Totals"
+    type: number
+    sql: ${initial_access_console_CLI} ;;
+    drill_fields: [method_name]
+  }
+
+  measure: persistence_total {
+    label: "Persistence - Total"
+    group_label: "MITRE ATT&CK Totals"
+    type: number
+    sql: ${persistence_cloud_identity} + ${persistence_gce} + ${persistence_iam} + ${persistence_cloud_functions} ;;
+  }
+
   dimension: num_response_items {
 
     type: number
