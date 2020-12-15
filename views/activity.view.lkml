@@ -261,7 +261,7 @@ measure: avg_denials_per_user {
     drill_fields: [method_name]
   }
 
-  measure: initial_access_console_CLI {
+  measure: initial_access_console_cli {
     label: "Initial Access - Console/CLI"
     group_label: "MITRE ATT&CK Metrics"
     type: count
@@ -301,6 +301,146 @@ measure: avg_denials_per_user {
     drill_fields: [method_name]
   }
 
+  measure: defense_evasion_GCE {
+    label: "Defense Evasion - GCE"
+    group_label: "MITRE ATT&CK Metrics"
+    type: count
+    filters: [
+      method_name: "V1.compute.firewalls.delete, V1.compute.firewalls.update, Beta.compute.instances.delete, v1.compute.disks.createSnapshot"
+    ]
+    drill_fields: [method_name]
+  }
+
+  measure: defense_evasion_cloud_resource_manager {
+    label: "Defense Evasion - Cloud Resource Manager"
+    group_label: "MITRE ATT&CK Metrics"
+    type: count
+    filters: [
+      method_name: "ClearOrgPolicy, DeleteProject"
+    ]
+    drill_fields: [method_name]
+  }
+
+  measure: credential_access_secrets_manager{
+    label: "Credential Access - Secrets Manager"
+    group_label: "MITRE ATT&CK Metrics"
+    type: count
+    filters: [
+      method_name: "google.cloud.secretmanager.v1.SecretManagerService.AddSecretVersion, google.cloud.secretmanager.v1.SecretManagerService.ListSecrets, google.cloud.secretmanager.v1.SecretManagerService.GetSecret"
+    ]
+    drill_fields: [method_name]
+  }
+
+  measure: credential_access_iam{
+    label: "Credential Access - IAM"
+    group_label: "MITRE ATT&CK Metrics"
+    type: count
+    filters: [
+      method_name: "google.iam.admin.v1.CreateServiceAccountKey"
+    ]
+    drill_fields: [method_name]
+  }
+
+  measure: discovery_gcp_services {
+    label: "Discovery - GCP Services"
+    group_label: "MITRE ATT&CK Metrics"
+    type: count
+    filters: [
+      method_name: "GET*, LIST*"
+    ]
+    drill_fields: [method_name]
+  }
+
+  measure: collection_gcs {
+    label: "Collection - GCS"
+    group_label: "MITRE ATT&CK Metrics"
+    type: count
+    filters: [
+      method_name: "Storage.objects.get, storage.buckets.get"
+    ]
+    drill_fields: [method_name]
+  }
+
+  measure: collection_bigquery {
+    label: "Collection - BigQuery"
+    group_label: "MITRE ATT&CK Metrics"
+    type: count
+    filters: [
+      method_name: "Jobservice.insert, google.cloud.bigquery.v2.JobService.InsertJob"
+    ]
+    drill_fields: [method_name]
+  }
+
+  measure: exfiltration_gcs {
+    label: "Exfiltration - GCS"
+    group_label: "MITRE ATT&CK Metrics"
+    type: count
+    filters: [
+      method_name: "Storage.objects.get, storage.buckets.get"
+    ]
+    drill_fields: [method_name]
+  }
+
+  measure: exfiltration_bigquery {
+    label: "Exfiltration - BigQuery"
+    group_label: "MITRE ATT&CK Metrics"
+    type: count
+    filters: [
+      method_name: "Jobservice.insert, google.cloud.bigquery.v2.JobService.InsertJob"
+    ]
+    drill_fields: [method_name]
+  }
+
+  measure: exfiltration_gce {
+    label: "Exfiltration - GCE"
+    group_label: "MITRE ATT&CK Metrics"
+    type: count
+    filters: [
+      method_name: "v1.compute.disks.createSnapshot"
+    ]
+    drill_fields: [method_name]
+  }
+
+  measure: exfiltration_total {
+    label: "Exfiltration - Total"
+    group_label: "MITRE ATT&CK Totals"
+    type: number
+    sql:  ${exfiltration_bigquery} + ${exfiltration_gce} + ${exfiltration_gcs} ;;
+    drill_fields: [method_name]
+  }
+
+  measure: collection_total {
+    label: "Collection - Total"
+    group_label: "MITRE ATT&CK Totals"
+    type: number
+    sql:  ${collection_bigquery} + ${collection_gcs}  ;;
+    drill_fields: [method_name]
+  }
+
+  measure: discovery_total {
+    label: "Discovery - Total"
+    group_label: "MITRE ATT&CK Totals"
+    type: number
+    sql: ${discovery_gcp_services}  ;;
+    drill_fields: [method_name]
+  }
+
+  measure: credential_access_total {
+    label: "Credential Access - Total"
+    group_label: "MITRE ATT&CK Totals"
+    type: number
+    sql: ${credential_access_iam} + ${credential_access_secrets_manager}  ;;
+    drill_fields: [method_name]
+  }
+
+  measure: defense_evasion_total {
+    label: "Defense Evasion - Total"
+    group_label: "MITRE ATT&CK Totals"
+    type: number
+    sql: ${defense_evasion_GCE} + ${defense_evasion_cloud_resource_manager}  ;;
+    drill_fields: [method_name]
+  }
+
   measure: privilege_escalation_total {
     label: "Privilege Escalation - Total"
     group_label: "MITRE ATT&CK Totals"
@@ -313,7 +453,7 @@ measure: avg_denials_per_user {
     label: "Initial Access - Total"
     group_label: "MITRE ATT&CK Totals"
     type: number
-    sql: ${initial_access_console_CLI} ;;
+    sql: ${initial_access_console_cli} ;;
     drill_fields: [method_name]
   }
 
@@ -322,6 +462,13 @@ measure: avg_denials_per_user {
     group_label: "MITRE ATT&CK Totals"
     type: number
     sql: ${persistence_cloud_identity} + ${persistence_gce} + ${persistence_iam} + ${persistence_cloud_functions} ;;
+  }
+
+  measure: total_mitre_api_calls {
+    label: "Total MITRE API Calls"
+    group_label: "MITRE ATT&CK Totals"
+    type: number
+    sql: ${collection_total} + ${credential_access_total} + ${discovery_total} + ${defense_evasion_total} + ${exfiltration_total} + ${initial_access_total} + ${persistence_total} + ${privilege_escalation_total} ;;
   }
 
   dimension: num_response_items {
