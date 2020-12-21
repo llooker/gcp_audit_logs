@@ -824,7 +824,7 @@ measure: avg_denials_per_user {
  dimension: service_name {
     type: string
     sql: SUBSTR(${service_name_raw}, 0, STRPOS(${service_name_raw}, ".") -1)  ;;
-    hidden: yes
+    # hidden: yes
   }
 
   dimension: bytes_billed {
