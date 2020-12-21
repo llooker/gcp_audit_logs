@@ -228,7 +228,7 @@ measure: avg_denials_per_user {
     filters: [
      method_name: "google.admin.AdminService.createRole, google.admin.AdminService.createUser, google.admin.AdminService.assignRole, google.admin.AdminService.addGroupMember"
     ]
-    drill_fields: [method_name, persistence_cloud_identity]
+    drill_fields: [method_name, timestamp_time, activity_authentication_info.principal_email]
   }
 
   measure: persistence_gce {
@@ -406,7 +406,7 @@ measure: avg_denials_per_user {
     group_label: "MITRE ATT&CK Totals"
     type: number
     sql:  ${exfiltration_bigquery} + ${exfiltration_gce} + ${exfiltration_gcs} ;;
-    drill_fields: [method_name]
+    drill_fields: [exfiltration_bigquery, exfiltration_gce, exfiltration_gcs]
   }
 
   measure: collection_total {
@@ -414,7 +414,7 @@ measure: avg_denials_per_user {
     group_label: "MITRE ATT&CK Totals"
     type: number
     sql:  ${collection_bigquery} + ${collection_gcs}  ;;
-    drill_fields: [method_name]
+    drill_fields: [collection_bigquery, collection_gcs]
   }
 
   measure: discovery_total {
@@ -422,7 +422,7 @@ measure: avg_denials_per_user {
     group_label: "MITRE ATT&CK Totals"
     type: number
     sql: ${discovery_gcp_services}  ;;
-    drill_fields: [method_name]
+    drill_fields: [discovery_gcp_services]
   }
 
   measure: credential_access_total {
@@ -430,7 +430,7 @@ measure: avg_denials_per_user {
     group_label: "MITRE ATT&CK Totals"
     type: number
     sql: ${credential_access_iam} + ${credential_access_secrets_manager}  ;;
-    drill_fields: [method_name]
+    drill_fields: [credential_access_iam, credential_access_secrets_manager]
   }
 
   measure: defense_evasion_total {
@@ -438,7 +438,7 @@ measure: avg_denials_per_user {
     group_label: "MITRE ATT&CK Totals"
     type: number
     sql: ${defense_evasion_GCE} + ${defense_evasion_cloud_resource_manager}  ;;
-    drill_fields: [method_name]
+    drill_fields: [defense_evasion_cloud_resource_manager]
   }
 
   measure: privilege_escalation_total {
@@ -446,7 +446,7 @@ measure: avg_denials_per_user {
     group_label: "MITRE ATT&CK Totals"
     type: number
     sql: ${privilege_escalation_cloud_identity} + ${privilege_escalation_iam} + ${privilege_escalation_access_context_manager} ;;
-    drill_fields: [method_name]
+    drill_fields: [privilege_escalation_access_context_manager, privilege_escalation_cloud_identity, privilege_escalation_iam]
   }
 
   measure: initial_access_total {
@@ -454,7 +454,7 @@ measure: avg_denials_per_user {
     group_label: "MITRE ATT&CK Totals"
     type: number
     sql: ${initial_access_console_cli} ;;
-    drill_fields: [method_name]
+    drill_fields: [initial_access_console_cli]
   }
 
   measure: persistence_total {
@@ -462,6 +462,7 @@ measure: avg_denials_per_user {
     group_label: "MITRE ATT&CK Totals"
     type: number
     sql: ${persistence_cloud_identity} + ${persistence_gce} + ${persistence_iam} + ${persistence_cloud_functions} ;;
+    drill_fields: [persistence_cloud_functions, persistence_gce, persistence_iam, persistence_cloud_identity]
   }
 
   measure: total_mitre_api_calls {
@@ -469,6 +470,7 @@ measure: avg_denials_per_user {
     group_label: "MITRE ATT&CK Totals"
     type: number
     sql: ${collection_total} + ${credential_access_total} + ${discovery_total} + ${defense_evasion_total} + ${exfiltration_total} + ${initial_access_total} + ${persistence_total} + ${privilege_escalation_total} ;;
+    drill_fields: [collection_total, credential_access_total, discovery_total, defense_evasion_total, exfiltration_total, initial_access_total, persistence_total, privilege_escalation_total]
   }
 
   dimension: num_response_items {
