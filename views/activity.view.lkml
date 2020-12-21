@@ -228,7 +228,7 @@ measure: avg_denials_per_user {
     filters: [
      method_name: "google.admin.AdminService.createRole, google.admin.AdminService.createUser, google.admin.AdminService.assignRole, google.admin.AdminService.addGroupMember"
     ]
-    drill_fields: [method_name, timestamp_time, activity_authentication_info.principal_email]
+    drill_fields: [mitre*]
   }
 
   measure: persistence_gce {
@@ -238,7 +238,7 @@ measure: avg_denials_per_user {
     filters: [
       method_name: "v1.compute.disks.createSnapshot, Beta.compute.instances.insert, instances.setMetadata"
     ]
-    drill_fields: [method_name]
+    drill_fields: [mitre*]
   }
 
   measure: persistence_iam {
@@ -248,7 +248,7 @@ measure: avg_denials_per_user {
     filters: [
       method_name: "google.iam.admin.v1.CreateServiceAccountKey, google.iam.admin.v1.SetIAMPolicy, CreateServiceAccount"
     ]
-    drill_fields: [method_name]
+    drill_fields: [mitre*]
   }
 
   measure: persistence_cloud_functions {
@@ -258,7 +258,7 @@ measure: avg_denials_per_user {
     filters: [
       method_name: "google.cloud.functions.v1.CloudFunctionsService.CreateFunction, google.cloud.functions.v1.CloudFunctionsService.UpdateFunction"
     ]
-    drill_fields: [method_name]
+    drill_fields: [mitre*]
   }
 
   measure: initial_access_console_cli {
@@ -268,7 +268,7 @@ measure: avg_denials_per_user {
     filters: [
       method_name: "LoginService.loginSuccess, LoginService.loginFailure"
     ]
-    drill_fields: [method_name]
+    drill_fields: [mitre*]
   }
 
   measure: privilege_escalation_cloud_identity {
@@ -278,7 +278,7 @@ measure: avg_denials_per_user {
     filters: [
       method_name: "google.admin.AdminService.addGroupMember, google.admin.AdminService.updateAccessLevelV2, google.admin.AdminService.assignRole, google.admin.AdminService.createAccessLevelV2, google.admin.AdminService.createRole, google.admin.AdminService.changeGroupSetting"
     ]
-    drill_fields: [method_name]
+    drill_fields: [mitre*]
   }
 
   measure: privilege_escalation_iam {
@@ -288,7 +288,7 @@ measure: avg_denials_per_user {
     filters: [
       method_name: "google.iam.admin.v1.UpdateRole, google.iam.admin.v1.SetIAMPolicy, google.iam.admin.v1.CreateRole"
     ]
-    drill_fields: [method_name]
+    drill_fields: [mitre*]
   }
 
   measure: privilege_escalation_access_context_manager {
@@ -298,7 +298,7 @@ measure: avg_denials_per_user {
     filters: [
       method_name: "google.identity.accesscontextmanager.v1.AccessContextManager.UpdateAccessLevel, google.identity.accesscontextmanager.v1.AccessContextManager.UpdateServicePerimeter, google.identity.accesscontextmanager.v1.AccessContextManager.CreateAccessLevel"
     ]
-    drill_fields: [method_name]
+    drill_fields: [mitre*]
   }
 
   measure: defense_evasion_GCE {
@@ -308,7 +308,7 @@ measure: avg_denials_per_user {
     filters: [
       method_name: "V1.compute.firewalls.delete, V1.compute.firewalls.update, Beta.compute.instances.delete, v1.compute.disks.createSnapshot"
     ]
-    drill_fields: [method_name]
+    drill_fields: [mitre*]
   }
 
   measure: defense_evasion_cloud_resource_manager {
@@ -318,7 +318,7 @@ measure: avg_denials_per_user {
     filters: [
       method_name: "ClearOrgPolicy, DeleteProject"
     ]
-    drill_fields: [method_name]
+    drill_fields: [mitre*]
   }
 
   measure: credential_access_secrets_manager{
@@ -328,7 +328,7 @@ measure: avg_denials_per_user {
     filters: [
       method_name: "google.cloud.secretmanager.v1.SecretManagerService.AddSecretVersion, google.cloud.secretmanager.v1.SecretManagerService.ListSecrets, google.cloud.secretmanager.v1.SecretManagerService.GetSecret"
     ]
-    drill_fields: [method_name]
+    drill_fields: [mitre*]
   }
 
   measure: credential_access_iam{
@@ -338,7 +338,7 @@ measure: avg_denials_per_user {
     filters: [
       method_name: "google.iam.admin.v1.CreateServiceAccountKey"
     ]
-    drill_fields: [method_name]
+    drill_fields: [mitre*]
   }
 
   measure: discovery_gcp_services {
@@ -348,7 +348,7 @@ measure: avg_denials_per_user {
     filters: [
       method_name: "GET*, LIST*"
     ]
-    drill_fields: [method_name]
+    drill_fields: [mitre*]
   }
 
   measure: collection_gcs {
@@ -358,7 +358,7 @@ measure: avg_denials_per_user {
     filters: [
       method_name: "Storage.objects.get, storage.buckets.get"
     ]
-    drill_fields: [method_name]
+    drill_fields: [mitre*]
   }
 
   measure: collection_bigquery {
@@ -368,7 +368,7 @@ measure: avg_denials_per_user {
     filters: [
       method_name: "Jobservice.insert, google.cloud.bigquery.v2.JobService.InsertJob"
     ]
-    drill_fields: [method_name]
+    drill_fields: [mitre*]
   }
 
   measure: exfiltration_gcs {
@@ -378,7 +378,7 @@ measure: avg_denials_per_user {
     filters: [
       method_name: "Storage.objects.get, storage.buckets.get"
     ]
-    drill_fields: [method_name]
+    drill_fields: [mitre*]
   }
 
   measure: exfiltration_bigquery {
@@ -388,7 +388,7 @@ measure: avg_denials_per_user {
     filters: [
       method_name: "Jobservice.insert, google.cloud.bigquery.v2.JobService.InsertJob"
     ]
-    drill_fields: [method_name]
+    drill_fields: [mitre*]
   }
 
   measure: exfiltration_gce {
@@ -398,7 +398,7 @@ measure: avg_denials_per_user {
     filters: [
       method_name: "v1.compute.disks.createSnapshot"
     ]
-    drill_fields: [method_name]
+    drill_fields: [mitre*]
   }
 
   measure: exfiltration_total {
@@ -836,6 +836,9 @@ measure: avg_denials_per_user {
 
   set: drill1 {
     fields: [service_name, timestamp_time, activity_authorization_info.granted, resource_name]
+  }
+  set: mitre {
+    fields: [method_name, timestamp_time, activity_authentication_info.principal_email]
   }
 }
 
