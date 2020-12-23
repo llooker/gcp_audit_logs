@@ -508,17 +508,6 @@ view: access_authorization_info {
     sql: ${TABLE}.granted ;;
   }
 
-#     dimension: service {
-#       group_label: "Protopayload Auditlog Auth Info Resource"
-#       type: string
-#       sql: ${TABLE}.protopayload_auditlog.authorization_info.resource_attributes.service ;;
-#     }
-#
-#     dimension: type {
-#       group_label: "Protopayload Auditlog Auth Info Resource"
-#       type: string
-#       sql: ${TABLE}.protopayload_auditlog.authorization_info.resource_attributes.type ;;
-#     }
   dimension: resource_attributes {
     hidden: yes
     sql: ${TABLE}.resourceAttributes ;;
