@@ -12,7 +12,13 @@
 
 * GCP Audit Logs consist of Admin Activity, Data Access, System Events, and Policy Denied logs. This block is built on the mostlogs commonly used for analytics, Admin Activity and Data Access. Docs on these logs are [found here](https://cloud.google.com/logging/docs/audit).
 
-* Information on sinking logs to BQ HERE (ASJAD)
+* GCP logs can be exported to BigQuery using [Aggregated Sinks](https://cloud.google.com/logging/docs/export/aggregated_sinks) in [Cloud Logging](https://cloud.google.com/logging), This will allow you to create export log entries from all the projects, folders, and billing accounts of a Google Cloud organization.
+
+* Exporting involves writing a filter that selects the log entries you want to export and choosing a destination.  To use this block, you will send the logs to tables created in [BigQuery](https://cloud.google.com/bigquery) datasets. For instructions on how to do this please follow this [link](https://cloud.google.com/logging/docs/export)
+
+* Recommended Filter:
+`protoPayload.@type=type.googleapis.com/google.cloud.audit.AuditLog`
+
 
 
 ### Block Structure
