@@ -1,9 +1,9 @@
 ### What can I do with this Looker Block?
-**(1) Use pre-built dashboards to quickly analyze and alert on GCP Audit log data ** - Dashboards include an Admin Activity overview, an account investigation dashboard, and a dashboard that uses the MITRE ATT&CK framework to view activities that map to attack tactics.
+**(1) Use pre-built dashboards to quickly analyze and alert on GCP Audit log data** - Dashboards include an Admin Activity overview, an account investigation dashboard, and a dashboard that uses the MITRE ATT&CK framework to view activities that map to attack tactics.
 
-**(2) Easily explore and query GCP Audit Log data ** - This block contains Explores for the Admin Activity and Data Access tables. These Explores allow you to build custom queries, build additional reports and dashboards, and set up threshold alerts on any of these fields or associated metrics.
+**(2) Easily explore and query GCP Audit Log data** - This block contains Explores for the Admin Activity and Data Access tables. These Explores allow you to build custom queries, build additional reports and dashboards, and set up threshold alerts on any of these fields or associated metrics.
 
-**(3) Extend the model for further analysis ** - This project is likely a starting point for your own SOC. The model can be extended with metrics specific to your organization on the audit log data. It can also be extended to include analysis of any other log type. Looker can effectively be used as a SIEM tool for historical (vs real-time) analysis. Threshold alerts can be run at 5-minute increments and data can be queried as fast as it is landed in BigQuery.
+**(3) Extend the model for further analysis** - This project is likely a starting point for your own SOC. The model can be extended with metrics specific to your organization on the audit log data. It can also be extended to include analysis of any other log type. Looker can effectively be used as a SIEM tool for historical (vs real-time) analysis. Threshold alerts can be run at 5-minute increments and data can be queried as fast as it is landed in BigQuery.
 
 **(4) Use as part of an Enterprise Data Platform** - Take advantage of Looker's data platform functionality, including [data actions](https://looker.com/platform/actions), scheduling, permissions, alerting, parameterization (each user can only see their own data), and more.
 
