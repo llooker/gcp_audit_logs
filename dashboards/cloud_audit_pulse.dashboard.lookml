@@ -5,7 +5,7 @@
   elements:
   - title: Accounts Accessing Many Services in an hour
     name: Accounts Accessing Many Services in an hour
-    model: gcp_audit_log_man
+    model: gcp_security
     explore: activity
     type: looker_grid
     fields: [activity.count_services, activity.timestamp_hour, activity_authentication_info.principal_email]
@@ -90,10 +90,10 @@
     height: 9
   - title: Failed Access Attempts
     name: Failed Access Attempts
-    model: gcp_audit_log_man
+    model: gcp_security
     explore: activity
     type: looker_line
-    fields: [activity.timestamp_date, activity.count, activity.service_name]
+    fields: [activity.timestamp_date, activity.service_name, activity.access_denials]
     pivots: [activity.service_name]
     filters:
       activity_authorization_info.granted: 'No'
@@ -139,6 +139,7 @@
     show_totals_labels: false
     show_silhouette: false
     totals_color: "#808080"
+    hidden_fields: []
     note_state: collapsed
     note_display: hover
     note_text: 'Provides a visual representation of failed attempts per day over a
@@ -151,7 +152,7 @@
     height: 9
   - title: Failed Logins
     name: Failed Logins
-    model: gcp_audit_log_man
+    model: gcp_security
     explore: activity
     type: looker_map
     fields: [ip_to_geography_lookup.location, activity.count, ip_to_geography_lookup.is_unexpected_country]
@@ -187,6 +188,8 @@
     map_marker_radius_min: 200000
     map_marker_radius_max: 600000
     defaults_version: 1
+    hidden_fields: []
+    y_axes: []
     listen: {}
     row: 13
     col: 0
@@ -194,7 +197,7 @@
     height: 10
   - title: Brute-Force Attacks
     name: Brute-Force Attacks
-    model: gcp_audit_log_man
+    model: gcp_security
     explore: failed_logins
     type: single_value
     fields: [failed_logins.brute_force_attacks]
@@ -244,6 +247,8 @@
     totals_color: "#808080"
     defaults_version: 1
     series_types: {}
+    hidden_fields: []
+    y_axes: []
     listen: {}
     row: 0
     col: 18
@@ -251,7 +256,7 @@
     height: 4
   - title: Failed Logins
     name: Failed Logins (2)
-    model: gcp_audit_log_man
+    model: gcp_security
     explore: activity
     type: single_value
     fields: [activity.access_denials, activity.timestamp_date]
@@ -302,6 +307,8 @@
     interpolation: linear
     defaults_version: 1
     series_types: {}
+    hidden_fields: []
+    y_axes: []
     listen: {}
     row: 0
     col: 0
@@ -309,7 +316,7 @@
     height: 4
   - title: "% Failed Logins Today"
     name: "% Failed Logins Today"
-    model: gcp_audit_log_man
+    model: gcp_security
     explore: activity
     type: single_value
     fields: [activity.percent_failed_logins]
@@ -360,6 +367,7 @@
     interpolation: linear
     defaults_version: 1
     series_types: {}
+    y_axes: []
     listen: {}
     row: 0
     col: 6
@@ -367,7 +375,7 @@
     height: 4
   - title: IAM Elevations
     name: IAM Elevations
-    model: gcp_audit_log_man
+    model: gcp_security
     explore: setiampolicy_operation
     type: single_value
     fields: [setiampolicy_operation.count, setiampolicy_operation.timestamp_date]
@@ -428,6 +436,8 @@
     totals_color: "#808080"
     defaults_version: 1
     series_types: {}
+    hidden_fields: []
+    y_axes: []
     listen: {}
     row: 0
     col: 12
@@ -435,7 +445,7 @@
     height: 4
   - title: Access Elevations by Day
     name: Access Elevations by Day
-    model: gcp_audit_log_man
+    model: gcp_security
     explore: setiampolicy_operation
     type: looker_area
     fields: [setiampolicy_operation.count, setiampolicy_operation.timestamp_date]
@@ -496,6 +506,7 @@
     ordering: none
     show_null_labels: false
     defaults_version: 1
+    hidden_fields: []
     listen: {}
     row: 25
     col: 0
@@ -503,7 +514,7 @@
     height: 7
   - title: Critical Elevations by Granter
     name: Critical Elevations by Granter
-    model: gcp_audit_log_man
+    model: gcp_security
     explore: setiampolicy_operation
     type: looker_grid
     fields: [setiampolicy_operation.count, setiampolicy_operation.granter_email]
@@ -570,6 +581,8 @@
     series_types: {}
     show_null_points: true
     interpolation: linear
+    hidden_fields: []
+    y_axes: []
     listen: {}
     row: 32
     col: 12
@@ -577,7 +590,7 @@
     height: 6
   - title: Critical Elevations by Grantee
     name: Critical Elevations by Grantee
-    model: gcp_audit_log_man
+    model: gcp_security
     explore: setiampolicy_operation
     type: looker_grid
     fields: [setiampolicy_operation.count, setiampolicy_operation.grantee_email]
@@ -644,6 +657,8 @@
     series_types: {}
     show_null_points: true
     interpolation: linear
+    hidden_fields: []
+    y_axes: []
     listen: {}
     row: 32
     col: 0
@@ -671,7 +686,7 @@
       type: relative_timeframes
       display: inline
       options: []
-    model: gcp_audit_log_man
+    model: gcp_security
     explore: activity
     listens_to_filters: []
     field: activity.timestamp_date

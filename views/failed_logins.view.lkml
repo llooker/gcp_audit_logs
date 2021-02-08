@@ -1,5 +1,12 @@
 include: "/views/**/*.view"
 
+#####
+#Dataset: Our dataset has four columns: Login Time, Service Name, User Email, and Login Granted (Y/N).
+# Your data may vary depending on what logs you are collecting but we will use these four columns as the basis of our anaysis.
+# Solution: Using a derived table with user inputs (parameters), we can construct a query to help identify security threats.
+# Scheduling this query to alert you when certain criteria are met can help you stay on top of your security threats without having to manually check logs.
+# Our solution uses four CTEs to calculate all of the necessary fields needed to identify threats.
+
 view: failed_logins {
   derived_table: {
     sql:

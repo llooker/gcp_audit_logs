@@ -5,7 +5,7 @@
   elements:
   - title: Denies and Grants by Day
     name: Denies and Grants by Day
-    model: gcp_audit_log_man
+    model: gcp_security
     explore: activity
     type: looker_line
     fields: [activity.access_denials, activity.access_grants, activity.timestamp_date]
@@ -54,6 +54,7 @@
       activity.access_denials: "#EA4335"
       activity.access_grants: "#34A853"
     defaults_version: 1
+    hidden_fields: []
     listen:
       Principal Email: activity_authentication_info.principal_email
       Timestamp Date: activity.timestamp_date
@@ -63,7 +64,7 @@
     height: 8
   - title: Access Activity
     name: Access Activity
-    model: gcp_audit_log_man
+    model: gcp_security
     explore: activity
     type: looker_grid
     fields: [activity.timestamp_time, activity_authorization_info.granted, activity_authorization_info.permission,
@@ -126,6 +127,7 @@
       activity.access_grants: "#34A853"
     defaults_version: 1
     series_types: {}
+    hidden_fields: []
     listen:
       Principal Email: activity_authentication_info.principal_email
       Timestamp Date: activity.timestamp_date
@@ -135,7 +137,7 @@
     height: 8
   - title: Identities Created by Principal Email
     name: Identities Created by Principal Email
-    model: gcp_audit_log_man
+    model: gcp_security
     explore: activity
     type: table
     fields: [activity.email_id]
@@ -155,6 +157,8 @@
     conditional_formatting_include_totals: false
     conditional_formatting_include_nulls: false
     defaults_version: 1
+    hidden_fields: []
+    y_axes: []
     listen:
       Principal Email: activity_authentication_info.principal_email
       Timestamp Date: activity.timestamp_date
@@ -164,7 +168,7 @@
     height: 6
   - title: Identity That Created This Principal Email
     name: Identity That Created This Principal Email
-    model: gcp_audit_log_man
+    model: gcp_security
     explore: activity
     type: table
     fields: [activity_authentication_info.principal_email, activity.timestamp_date]
@@ -184,6 +188,8 @@
     conditional_formatting_include_totals: false
     conditional_formatting_include_nulls: false
     defaults_version: 1
+    hidden_fields: []
+    y_axes: []
     listen:
       Principal Email: activity.email_id
     row: 16
@@ -194,7 +200,7 @@
   - name: Principal Email
     title: Principal Email
     type: string_filter
-    default_value: asjadnasir@google.com
+    default_value: ''
     allow_multiple_values: true
     required: false
     ui_config:
@@ -211,7 +217,7 @@
       type: relative_timeframes
       display: inline
       options: []
-    model: gcp_audit_log_man
+    model: gcp_security
     explore: activity
     listens_to_filters: []
     field: activity.timestamp_date

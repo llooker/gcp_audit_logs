@@ -15,143 +15,143 @@ view: ip_to_geography_lookup {
 
 
 
-  dimension: start_ipv4_to_int64 {
+  dimension: start_ipv4_to_int64 { group_label: "IP Geography Fields"
     type: number
     sql: ${TABLE}.start_ipv4_to_int64 ;;
   }
 
-  dimension: end_ipv4_int64 {
+  dimension: end_ipv4_int64 { group_label: "IP Geography Fields"
     type: number
     sql: ${TABLE}.end_ipv4_int64 ;;
   }
 
-  dimension: class_b {
+  dimension: class_b { group_label: "IP Geography Fields"
     type: number
     sql: ${TABLE}.class_b ;;
   }
 
-  dimension: geoname_id {
+  dimension: geoname_id { group_label: "IP Geography Fields"
     type: string
     sql: ${TABLE}.geoname_id ;;
   }
 
-  dimension: network {
+  dimension: network { group_label: "IP Geography Fields"
     type: string
     sql: ${TABLE}.network ;;
   }
 
-  dimension: registered_country_geoname_id {
+  dimension: registered_country_geoname_id { group_label: "IP Geography Fields"
     type: string
     sql: ${TABLE}.registered_country_geoname_id ;;
   }
 
-  dimension: represented_country_geoname_id {
+  dimension: represented_country_geoname_id { group_label: "IP Geography Fields"
     type: string
     sql: ${TABLE}.represented_country_geoname_id ;;
   }
 
-  dimension: is_anonymous_proxy {
+  dimension: is_anonymous_proxy { group_label: "IP Geography Fields"
     type: string
     sql: ${TABLE}.is_anonymous_proxy ;;
   }
 
-  dimension: is_satellite_provider {
+  dimension: is_satellite_provider { group_label: "IP Geography Fields"
     type: string
     sql: ${TABLE}.is_satellite_provider ;;
   }
 
-  dimension: postal_code {
+  dimension: postal_code { group_label: "IP Geography Fields"
     type: string
     sql: ${TABLE}.postal_code ;;
   }
 
-  dimension: latitude {
+  dimension: latitude { group_label: "IP Geography Fields"
     type: number
     sql: ${TABLE}.latitude ;;
   }
 
-  dimension: longitude {
+  dimension: longitude { group_label: "IP Geography Fields"
     type: number
     sql: ${TABLE}.longitude ;;
   }
 
-  dimension: accuracy_radius {
+  dimension: accuracy_radius { group_label: "IP Geography Fields"
     type: number
     sql: ${TABLE}.accuracy_radius ;;
   }
 
-  dimension: locale_code {
+  dimension: locale_code { group_label: "IP Geography Fields"
     type: string
     sql: ${TABLE}.locale_code ;;
   }
 
-  dimension: continent_code {
+  dimension: continent_code { group_label: "IP Geography Fields"
     type: string
     sql: ${TABLE}.continent_code ;;
   }
 
-  dimension: continent_name {
+  dimension: continent_name { group_label: "IP Geography Fields"
     type: string
     sql: ${TABLE}.continent_name ;;
   }
 
-  dimension: country_iso_code {
+  dimension: country_iso_code { group_label: "IP Geography Fields"
     type: string
     sql: ${TABLE}.country_iso_code ;;
   }
 
-  dimension: is_unexpected_country {
+  dimension: is_unexpected_country { group_label: "IP Geography Fields"
     description: "We would not expect traffic from these countries"
     type: yesno
     sql: ${country_iso_code} IN ('RU', 'CN', 'IR') ;;
   }
 
-  dimension: country_name {
+  dimension: country_name { group_label: "IP Geography Fields"
     type: string
     sql: ${TABLE}.country_name ;;
   }
 
-  dimension: subdivision_1_iso_code {
+  dimension: subdivision_1_iso_code { group_label: "IP Geography Fields"
     type: string
     sql: ${TABLE}.subdivision_1_iso_code ;;
   }
 
-  dimension: subdivision_1_name {
+  dimension: subdivision_1_name { group_label: "IP Geography Fields"
     type: string
     sql: ${TABLE}.subdivision_1_name ;;
   }
 
-  dimension: subdivision_2_iso_code {
+  dimension: subdivision_2_iso_code { group_label: "IP Geography Fields"
     type: string
     sql: ${TABLE}.subdivision_2_iso_code ;;
   }
 
-  dimension: subdivision_2_name {
+  dimension: subdivision_2_name { group_label: "IP Geography Fields"
     type: string
     sql: ${TABLE}.subdivision_2_name ;;
   }
 
-  dimension: city_name {
+  dimension: city_name { group_label: "IP Geography Fields"
     type: string
     sql: ${TABLE}.city_name ;;
   }
 
-  dimension: metro_code {
+  dimension: metro_code { group_label: "IP Geography Fields"
     type: string
     sql: ${TABLE}.metro_code ;;
   }
 
-  dimension: time_zone {
+  dimension: time_zone { group_label: "IP Geography Fields"
     type: string
     sql: ${TABLE}.time_zone ;;
   }
 
-  dimension: is_in_european_union {
+  dimension: is_in_european_union { group_label: "IP Geography Fields"
     type: string
     sql: ${TABLE}.is_in_european_union ;;
   }
 
-  dimension: location {
+  dimension: location { group_label: "IP Geography Fields"
     type: location
     sql_latitude: ${TABLE}.latitude ;;
     sql_longitude: ${TABLE}.longitude ;;

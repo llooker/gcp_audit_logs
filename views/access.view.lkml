@@ -1,6 +1,7 @@
 view: access {
   sql_table_name: `security_logs.cloudaudit_googleapis_com_data_access`
     ;;
+    label: "Data Access"
 
   #############
   ## DIMENSIONS
@@ -99,36 +100,36 @@ view: access {
 
 
   dimension: requesttest {
-    view_label: "Auditlog"
+
     sql: ${TABLE}.protopayload_auditlog.request.name ;;
   }
 
   dimension: metadata_json {
-    view_label: "Auditlog"
+
     type: string
     sql: ${TABLE}.protopayload_auditlog.metadataJson ;;
   }
 
   dimension: method_name {
-    view_label: "Auditlog"
+
     type: string
     sql: ${TABLE}.protopayload_auditlog.methodName ;;
   }
 
   dimension: num_response_items {
-    view_label: "Auditlog"
+
     type: number
     sql: ${TABLE}.protopayload_auditlog.numResponseItems ;;
   }
 
   dimension: request_json {
-    view_label: "Auditlog"
+
     type: string
     sql: ${TABLE}.protopayload_auditlog.requestJson ;;
   }
 
   dimension: resource_name {
-    view_label: "Auditlog"
+
     type: string
     sql: ${TABLE}.protopayload_auditlog.resourceName ;;
   }
@@ -148,35 +149,35 @@ view: access {
   }
 
   dimension: code {
-    view_label: "Auditlog"
+
     group_label: "Status"
     type: number
     sql: ${TABLE}.protopayload_auditlog.status.code ;;
   }
 
   dimension: message {
-    view_label: "Auditlog"
+
     group_label: "Status"
     type: string
     sql: ${TABLE}.protopayload_auditlog.status.message ;;
   }
 
   dimension: caller_ip {
-    view_label: "Auditlog"
+
     group_label: "Request Metadata"
     type: string
     sql: ${TABLE}.protopayload_auditlog.requestMetadata.callerIp ;;
   }
 
   dimension: caller_network {
-    view_label: "Auditlog"
+
     group_label: "Request Metadata"
     type: string
     sql: ${TABLE}.protopayload_auditlog.requestMetadata.callerNetwork ;;
   }
 
   dimension: caller_supplied_user_agent {
-    view_label: "Auditlog"
+
     group_label: "Request Metadata"
     type: string
     sql: ${TABLE}.protopayload_auditlog.requestMetadata.callerSuppliedUserAgent ;;
@@ -394,7 +395,7 @@ view: access {
   }
 
   dimension: service_name {
-    view_label: "Auditlog"
+
     type: string
     sql: ${TABLE}.protopayload_auditlog.serviceName ;;
   }
@@ -465,7 +466,8 @@ view: access {
 ##########
 ## ARRAYS and NESTING
 view: access_auditlog {
-  view_label: "Auditlog"
+  view_label: "Data Access"
+
   sql_table_name: `cloudaudit_googleapis_com_data_access.protopayload_auditlog` ;;
 
   dimension: authorization_info {
@@ -479,14 +481,14 @@ view: access_auditlog {
 
   ### IDK How to deal with the @ in the key name
   dimension: type {
-    sql: ${TABLE}.\@type ;;
-  }
+    sql: json_extract_scalar(replace(protopayload_auditlog.requestJson, '@type', 'type'),"$.type") ;;
+    }
 }
 
 
 view: access_authorization_info {
   sql_table_name: `cloudaudit_googleapis_com_data_access.protopayload_auditlog.authorization_info` ;;
-  view_label: "Auditlog"
+
 
   dimension: permission {
     group_label: "Authorization Info"
@@ -506,17 +508,6 @@ view: access_authorization_info {
     sql: ${TABLE}.granted ;;
   }
 
-#     dimension: service {
-#       group_label: "Protopayload Auditlog Auth Info Resource"
-#       type: string
-#       sql: ${TABLE}.protopayload_auditlog.authorization_info.resource_attributes.service ;;
-#     }
-#
-#     dimension: type {
-#       group_label: "Protopayload Auditlog Auth Info Resource"
-#       type: string
-#       sql: ${TABLE}.protopayload_auditlog.authorization_info.resource_attributes.type ;;
-#     }
   dimension: resource_attributes {
     hidden: yes
     sql: ${TABLE}.resourceAttributes ;;
@@ -526,7 +517,7 @@ view: access_authorization_info {
 view: access_authentication_info {
   sql_table_name: `cloudaudit_googleapis_com_data_access.protopayload_auditlog.authentication_info` ;;
 
-  view_label: "Auditlog"
+
   dimension: authority_selector {
     group_label: "Authentication Info"
     type: string
