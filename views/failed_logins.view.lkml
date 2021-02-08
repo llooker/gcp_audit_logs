@@ -121,7 +121,7 @@ view: failed_logins {
     sql: ${TABLE}.principal_email ;;
     link: {
       label: "Account Investigation"
-      url: "/dashboards-next/832?Principal+Email={{ value | encode_uri }}"
+      url: "/dashboards-next/516?Principal+Email={{ value | encode_uri }}"
       icon_url: "https://www.looker.com/favicon.ico"
     }
   }
